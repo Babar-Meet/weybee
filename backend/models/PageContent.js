@@ -15,7 +15,7 @@ const sectionSchema = new mongoose.Schema({
     image: { type: String },
     link: { type: String }
   }]
-}, { _id: true });
+}, { _id: true, strict: false });
 
 const pageContentSchema = new mongoose.Schema({
   pageSlug: { type: String, required: true, unique: true },
@@ -24,7 +24,7 @@ const pageContentSchema = new mongoose.Schema({
   sections: [sectionSchema],
   isPublished: { type: Boolean, default: true },
   lastEditedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-}, { timestamps: true });
+}, { timestamps: true, strict: false });
 
 pageContentSchema.index({ pageSlug: 1 });
 

@@ -1,9 +1,6 @@
 const PageContent = require('./models/PageContent');
 
 async function seedContent() {
-  const count = await PageContent.countDocuments();
-  if (count > 0) return console.log('📄 Content already seeded.');
-
   const pages = [
     {
       pageSlug: 'home', title: 'Home', isPublished: true,
@@ -143,16 +140,48 @@ async function seedContent() {
         {
           sectionId: 'hero', order: 0, bgColor: '#5670FB',
           heading: 'Contact Us',
-          text: 'Reach out today, and let\'s discuss how we can accelerate your business growth with innovative technology solutions.'
+          text: 'At WeyBee, we believe in the power of technology to transform businesses and shape the future.',
+          buttons: [
+            { title: 'View Services ❯', link: '/services' },
+            { title: 'About us ❯', link: '/about-us' }
+          ]
         },
         {
           sectionId: 'offices', order: 1, bgColor: '#fff',
-          heading: 'Our Offices',
-          items: [
-            { title: 'Rajkot, India', description: '303, Nakshatra Heights, 150 Feet Ring Road, Rajkot, Gujarat', icon: '+91 88660 08860' },
-            { title: 'Ahmedabad, India', description: '1012, Aaron Spectra, Rajpath Rangoli Rd, Ahmedabad, Gujarat', icon: '+91 88660 08860' },
-            { title: 'Sydney, Australia', description: 'WOTSO Pyrmont, 3/55 Pyrmont Bridge Rd, Pyrmont NSW 2009', icon: '+61 2 8024 5936' }
+          heading1: 'Visit us',
+          heading2: 'Anytime',
+          text: 'Visit our Office or simply send us an email anytime you want. If you have any questions, please feel free to contact us.',
+          groups: [
+            {
+              country: 'India Offices', flag: '🇮🇳', phone: '+91 88660 08860',
+              locations: [
+                { title: 'Rajkot Office', description: '303, Nakshatra Heights, 150 Feet Ring Road, Opp. Raiya Telephone Exchange, Besides Water Tank, Rajkot, Gujarat 360005.' },
+                { title: 'Ahmedabad Office', description: '1012, Aaron Spectra, Rajpath Rangoli Rd, behind Rajpath club, Bodakdev, Ahmedabad, Gujarat 380059' }
+              ]
+            },
+            {
+              country: 'Australia Office', flag: '🇦🇺', phone: '+61 2 8024 5936',
+              locations: [
+                { title: 'Sydney Office', description: 'WOTSO Pyrmont, 3/55 Pyrmont Bridge Rd, Pyrmont NSW 2009, Australia' }
+              ]
+            },
+            {
+              country: 'Contact Details',
+              locations: [
+                { title: 'Email us', description: 'info@weybee.com', icon: 'mail' },
+                { title: 'Web', description: 'www.weybee.com', icon: 'web' }
+              ]
+            }
           ]
+        },
+        {
+          sectionId: 'contact-form', order: 2, bgColor: '#5670FB',
+          heading: 'Get in Touch with us'
+        },
+        {
+          sectionId: 'newsletter', order: 3, bgColor: '#f4f6fa',
+          heading: 'Stay updated',
+          text: 'Stay connected with WeyBee Solutions and receive occasional updates filled with valuable insights. We promise no spam or irrelevant emails—just pure excellence!'
         }
       ]
     },
@@ -269,12 +298,13 @@ async function seedContent() {
   ];
 
   for (const page of pages) {
-    const exists = await PageContent.findOne({ pageSlug: page.pageSlug });
-    if (!exists) {
-      await PageContent.create(page);
-    }
+    await PageContent.findOneAndUpdate(
+      { pageSlug: page.pageSlug },
+      page,
+      { upsert: true, new: true, strict: false }
+    );
   }
-  console.log('📄 Seeded pages checked and created if missing.');
+  console.log('📄 Seeded pages successfully synced to database.');
 }
 
 module.exports = seedContent;

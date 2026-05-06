@@ -38,23 +38,45 @@ function cleanPage(page) {
     isPublished: page.isPublished,
     metaDescription: page.metaDescription,
     sections: (page.sections || []).map(s => {
-      const clean = { sectionId: s.sectionId, order: s.order };
-      if (s.heading) clean.heading = s.heading;
-      if (s.subheading) clean.subheading = s.subheading;
-      if (s.text) clean.text = s.text;
-      if (s.image) clean.image = s.image;
-      if (s.bgColor) clean.bgColor = s.bgColor;
-      if (s.items && s.items.length > 0) {
-        clean.items = s.items.map(item => {
-          const ci = {};
-          if (item.title) ci.title = item.title;
-          if (item.description) ci.description = item.description;
-          if (item.icon) ci.icon = item.icon;
-          if (item.image) ci.image = item.image;
-          if (item.link) ci.link = item.link;
+      // Create a clean copy of the section without mongoose internals
+      const clean = { ...s };
+      delete clean._id;
+      delete clean.__v;
+      
+      // Also clean up items if they exist
+      if (clean.items && Array.isArray(clean.items)) {
+        clean.items = clean.items.map(item => {
+          const ci = { ...item };
+          delete ci._id;
           return ci;
         });
       }
+
+      // Also clean up groups/locations if they exist
+      if (clean.groups && Array.isArray(clean.groups)) {
+        clean.groups = clean.groups.map(g => {
+          const cg = { ...g };
+          delete cg._id;
+          if (cg.locations && Array.isArray(cg.locations)) {
+            cg.locations = cg.locations.map(l => {
+              const cl = { ...l };
+              delete cl._id;
+              return cl;
+            });
+          }
+          return cg;
+        });
+      }
+
+      // Clean up buttons if they exist
+      if (clean.buttons && Array.isArray(clean.buttons)) {
+        clean.buttons = clean.buttons.map(b => {
+          const cb = { ...b };
+          delete cb._id;
+          return cb;
+        });
+      }
+
       return clean;
     })
   };
