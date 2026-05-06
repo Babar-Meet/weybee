@@ -48,57 +48,6 @@ export default function Contact() {
 
   useEffect(() => {
     if (loading) return;
-    
-    // Suppress the annoying alert dialog from Google Maps API without key
-    const originalAlert = window.alert;
-    window.alert = function(msg) {
-      if (msg && msg.includes("Google Maps")) return;
-      originalAlert(msg);
-    };
-
-    const initMap = () => {
-      if (!window.google || !mapRef.current) return;
-      
-      const map = new window.google.maps.Map(mapRef.current, {
-        center: { lat: 22.2898144, lng: 70.7719602 },
-        zoom: 15,
-        disableDefaultUI: true,
-        zoomControl: true,
-        zoomControlOptions: {
-          position: window.google.maps.ControlPosition.RIGHT_CENTER
-        },
-        clickableIcons: true
-      });
-      
-      const infowindow = new window.google.maps.InfoWindow({
-        content: '<div style="padding:5px"><strong>WeyBee Solutions Pvt. Ltd.</strong><br>303, Nakshatra Heights<br>Rajkot, Gujarat 360005</div>'
-      });
-
-      const marker = new window.google.maps.Marker({
-        position: { lat: 22.2898144, lng: 70.7719602 },
-        map: map,
-        title: "WeyBee Solutions"
-      });
-      
-      marker.addListener("click", () => {
-        infowindow.open({ anchor: marker, map: map });
-      });
-    };
-
-    if (!window.google) {
-      window.initMap = initMap;
-      const script = document.createElement('script');
-      script.src = 'https://maps.googleapis.com/maps/api/js?callback=initMap';
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-    } else {
-      initMap();
-    }
-
-    return () => {
-      window.alert = originalAlert; // Restore
-    };
   }, [loading]);
 
   if (loading) return <SkeletonPage />;
@@ -171,13 +120,14 @@ export default function Contact() {
               backgroundColor: '#e5e3df'
             }}>
               
-              {/* Google Maps JS API Container */}
-              <div ref={mapRef} style={{ width: '100%', height: '100%', position: 'relative', zIndex: 1 }}></div>
-              
-              <style>{`
-                /* Hide the Google Maps error overlay box so the map remains visible despite missing API key */
-                .gm-err-container { display: none !important; }
-              `}</style>
+              {/* Google Maps Iframe Embed */}
+              <iframe 
+                src="https://maps.google.com/maps?q=22.2898144,70.7719602&z=15&output=embed" 
+                style={{ width: '100%', height: '100%', position: 'relative', zIndex: 1, border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade">
+              </iframe>
               
               {/* Geometric pattern overlay */}
               <div style={{ 

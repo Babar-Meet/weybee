@@ -190,11 +190,91 @@ async function seedContent() {
           ]
         }
       ]
+    },
+    {
+      pageSlug: 'services', title: 'Services', isPublished: true,
+      metaDescription: 'Explore WeyBee Services - IT Staff Augmentation, Software Development, Data Engineering, and Startups IT Services',
+      sections: [
+        {
+          sectionId: 'hero', order: 0, bgColor: '#5670FB',
+          heading: 'Our Services',
+          text: 'We specialize in end-to-end development, from ideation and design to deployment and maintenance. Our solutions are built to scale, innovate, and deliver results.'
+        },
+        {
+          sectionId: 'services-list', order: 1, bgColor: '#fff',
+          items: [
+            {
+              title: 'IT Staff Augmentation',
+              image: 'WeyBee-IT-Staff-Augmentation.webp',
+              description: 'Access to highly skilled IT professionals. Flexible, scalable solutions for all project sizes.',
+              icon: 'Hire Developers, Hire QA Engineers, Hire Managed Team',
+              link: '/it-staff-augmentation'
+            },
+            {
+              title: 'Software Development Services',
+              image: 'WeyBee-Software-Development.webp',
+              description: 'Transform ideas into reality with our expert Software Development Services.',
+              icon: 'Web Development, eCommerce, Mobile App, Platform Engineering',
+              link: '/software-development-services'
+            },
+            {
+              title: 'IT Services for Startups',
+              image: 'WeyBee-IT-Services-Startups.webp',
+              description: 'End-to-end MVP development and tech support tailored for startups.',
+              icon: 'MVP Development, End-to-End Tech Support, Cloud Solutions',
+              link: '/it-services-for-startups'
+            },
+            {
+              title: 'Data Engineering',
+              image: 'DataEngineering-Weybee-Services-1.webp',
+              description: 'Data scraping, AI-ML Engineering and reliable, scalable platforms.',
+              icon: 'Data Scraping, AI-ML Engineering, Data Warehousing',
+              link: '/data-engineering'
+            }
+          ]
+        },
+        {
+          sectionId: 'cta', order: 2, bgColor: '#5670FB',
+          heading: 'Ready to get started?',
+          text: 'Let\'s discuss how our services can help you achieve your goals.'
+        }
+      ]
+    },
+    {
+      pageSlug: 'success-stories', title: 'Success Stories', isPublished: true,
+      metaDescription: 'Read about WeyBee success stories and client experiences',
+      sections: [
+        {
+          sectionId: 'featured', order: 0, bgColor: 'transparent',
+          heading: 'Smart Health Monitoring System',
+          text: 'Developed a comprehensive remote patient monitoring platform that increased doctor efficiency by 40%.',
+          link: 'https://example.com/case-study-health'
+        },
+        {
+          sectionId: 'hero', order: 1, bgColor: '#fff',
+          heading: 'Transforming Ideas into Digital Reality',
+          text: 'Discover how we\'ve helped businesses across various industries achieve their goals through innovative technology solutions and dedicated partnership.'
+        },
+        {
+          sectionId: 'stats', order: 2, bgColor: '#5670FB',
+          items: [
+            { title: '145+', label: 'Projects Delivered' },
+            { title: '95%', label: 'Client Retention' },
+            { title: '30%', label: 'Avg. ROI Increase' },
+            { title: '15+', label: 'Industries Served' }
+          ]
+        }
+      ]
     }
   ];
 
-  await PageContent.insertMany(pages);
-  console.log('📄 Seeded', pages.length, 'pages of content.');
+  for (const page of pages) {
+    const exists = await PageContent.findOne({ pageSlug: page.pageSlug });
+    if (!exists) {
+      await PageContent.create(page);
+    }
+  }
+  console.log('📄 Seeded pages checked and created if missing.');
 }
 
 module.exports = seedContent;

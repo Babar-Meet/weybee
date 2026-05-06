@@ -87,7 +87,27 @@ const icons = {
 
 // Map from icon key in JSON to SVG component
 export const getIcon = (key) => {
-  return icons[key] || null;
+  // Map emojis (used in seeded database) to correct icon keys
+  const mapEmojiToKey = {
+    '🎓': 'dedicated-developers',
+    '🔍': 'transparent-operations',
+    '🧩': 'diverse-expertise',
+    '🤝': 'long-term-partnership',
+    '😊': 'client-satisfaction',
+    '📈': 'proven-growth',
+    '💡': 'innovative-approach',
+    '👨‍💻': 'skilled-talent',
+    '🎯': 'strategic-partnership'
+  };
+  
+  const finalKey = mapEmojiToKey[key] || key;
+  
+  if (icons[finalKey]) {
+    return icons[finalKey];
+  }
+  
+  // Fallback to rendering the text/emoji if no SVG is found
+  return <span style={{ fontSize: '28px' }}>{key}</span>;
 };
 
 export default icons;

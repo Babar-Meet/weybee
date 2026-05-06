@@ -1,0 +1,57 @@
+{
+  "pageSlug": "services",
+  "title": "Services",
+  "isPublished": true,
+  "metaDescription": "Explore WeyBee Services - IT Staff Augmentation, Software Development, Data Engineering, and Startups IT Services",
+  "sections": [
+    {
+      "sectionId": "hero",
+      "order": 0,
+      "bgColor": "#5670FB",
+      "heading": "Our Services",
+      "text": "We specialize in end-to-end development, from ideation and design to deployment and maintenance. Our solutions are built to scale, innovate, and deliver results."
+    },
+    {
+      "sectionId": "services-list",
+      "order": 1,
+      "bgColor": "#fff",
+      "items": [
+        {
+          "title": "IT Staff Augmentation",
+          "image": "WeyBee-IT-Staff-Augmentation.webp",
+          "description": "Access to highly skilled IT professionals. Flexible, scalable solutions for all project sizes.",
+          "icon": "Hire Developers, Hire QA Engineers, Hire Managed Team",
+          "link": "/it-staff-augmentation"
+        },
+        {
+          "title": "Software Development Services",
+          "image": "WeyBee-Software-Development.webp",
+          "description": "Transform ideas into reality with our expert Software Development Services.",
+          "icon": "Web Development, eCommerce, Mobile App, Platform Engineering",
+          "link": "/software-development-services"
+        },
+        {
+          "title": "IT Services for Startups",
+          "image": "WeyBee-IT-Services-Startups.webp",
+          "description": "End-to-end MVP development and tech support tailored for startups.",
+          "icon": "MVP Development, End-to-End Tech Support, Cloud Solutions",
+          "link": "/it-services-for-startups"
+        },
+        {
+          "title": "Data Engineering",
+          "image": "DataEngineering-Weybee-Services-1.webp",
+          "description": "Data scraping, AI-ML Engineering and reliable, scalable platforms.",
+          "icon": "Data Scraping, AI-ML Engineering, Data Warehousing",
+          "link": "/data-engineering"
+        }
+      ]
+    },
+    {
+      "sectionId": "cta",
+      "order": 2,
+      "bgColor": "#5670FB",
+      "heading": "Ready to get started?",
+      "text": "Let's discuss how our services can help you achieve your goals."
+    }
+  ]
+}

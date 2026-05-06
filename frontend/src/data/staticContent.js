@@ -5,13 +5,15 @@ import aboutUs from './pages/about-us.json';
 import contactUs from './pages/contact-us.json';
 import careers from './pages/careers.json';
 import successStories from './pages/success-stories.json';
+import services from './pages/services.json';
 
 const staticContent = {
   'home': home,
   'about-us': aboutUs,
   'contact-us': contactUs,
   'careers': careers,
-  'success-stories': successStories
+  'success-stories': successStories,
+  'services': services
 };
 
 export default staticContent;
