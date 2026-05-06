@@ -1,21 +1,360 @@
 {
   "company_knowledge": {
-    "name": "Weybee",
-    "description": "IT services focused on modern full-stack development, AI integration, and scalable app architectures.",
-    "founder": "Verified Founder Name (Update this)",
-    "co_founder": "Verified Co-Founder Name (Update this)",
-    "hr": "Verified HR Name (Update this)",
-    "contact_email": "contact@weybee.com",
-    "contact_phone": "+1 234 567 8900",
-    "employee_count": "50+ employees (Update this)",
-    "technologies": ["MERN Stack", "React", "Node.js", "Express", "MongoDB", "AI Integrations", "Groq", "OpenRouter"],
+    "name": "WeyBee",
+    "legal_name": "WeyBee Solutions Private Limited",
+    "description": "Indian IT services and software engineering company focused on custom software development, IT staff augmentation, startup engineering support, data engineering, AI/ML solutions, digital transformation, and digital marketing.",
+    "company_type": "Private Limited Company",
+    "industry": "IT Services and IT Consulting",
+    "status": "Active",
+    "cin": "U72900GJ2019PTC110949",
+    "incorporation_date": "2019-11-22",
+    "founded_year_public": "2019",
+    "possible_pre_incorporation_history": {
+      "year": "2013",
+      "status": "unverified",
+      "note": "Some third-party directories mention 2013, but legal incorporation records point to 22 November 2019."
+    },
+    "headquarters": {
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "country": "India",
+      "registered_address": "Nakshatra Heights, 150 Ft Ring Road, Rajkot, Gujarat, India"
+    },
+    "offices": [
+      {
+        "city": "Rajkot",
+        "state": "Gujarat",
+        "country": "India",
+        "type": "Headquarters / registered location"
+      },
+      {
+        "city": "Ahmedabad",
+        "state": "Gujarat",
+        "country": "India",
+        "type": "Office",
+        "address_note": "Current website points to Aaron Spectra, Bodakdev; older indexed results may show Mondeal Heights."
+      },
+      {
+        "city": "Sydney",
+        "state": "New South Wales",
+        "country": "Australia",
+        "type": "Office"
+      }
+    ],
+    "contact": {
+      "primary_email": "info@weybee.com",
+      "hr_email": "hr@weybee.com",
+      "india_phone": "+91 88660 08860",
+      "australia_phone": "+61 2 8024 5936",
+      "website": "https://weybee.com",
+      "careers_website": "https://careers.weybee.com"
+    },
+    "leadership": {
+      "legal_directors": [
+        {
+          "name": "Vrunda Harshit Vakil",
+          "role": "Director",
+          "confidence": "high"
+        },
+        {
+          "name": "Dipti Hiren Kotadiya",
+          "role": "Director",
+          "confidence": "high"
+        }
+      ],
+      "public_facing_leadership_claims": [
+        {
+          "name": "Harshit Vakil",
+          "possible_roles": [
+            "Co-Founder",
+            "Founder",
+            "CEO"
+          ],
+          "confidence": "medium",
+          "note": "Public sources conflict on exact title."
+        },
+        {
+          "name": "Vrunda Vakil",
+          "possible_roles": [
+            "Co-Founder",
+            "CTO"
+          ],
+          "confidence": "medium",
+          "note": "Public profile sources describe her as Co-Founder and CTO."
+        },
+        {
+          "name": "Hiren Kotadiya",
+          "possible_roles": [
+            "Founder",
+            "Co-Founder"
+          ],
+          "confidence": "low_to_medium",
+          "note": "Appears in some public/community references; exact WeyBee role needs internal confirmation."
+        }
+      ],
+      "founder": {
+        "value": null,
+        "status": "needs_internal_confirmation",
+        "note": "Public sources conflict, so do not hardcode one founder name without company confirmation."
+      },
+      "co_founder": {
+        "value": null,
+        "status": "needs_internal_confirmation",
+        "note": "Public sources mention Harshit Vakil, Vrunda Vakil, and possibly Hiren Kotadiya, but claims are not fully consistent."
+      }
+    },
+    "hr_and_recruiting": {
+      "functional_hr_contact": "hr@weybee.com",
+      "possible_hr_people": [
+        {
+          "name": "Khushali Shah",
+          "possible_role": "HR Manager",
+          "confidence": "medium",
+          "note": "Strong current public recruiting signal, but still should be internally confirmed."
+        },
+        {
+          "name": "Devangi Jani",
+          "possible_role": "HR Manager / Talent Acquisition Specialist",
+          "confidence": "low_to_medium",
+          "note": "Appears in public profile snippets; role/current status should be verified."
+        }
+      ]
+    },
+    "employee_count": {
+      "public_summary": "50+ employees",
+      "linkedin_size_band": "51-200 employees",
+      "exact_count": null,
+      "confidence": "medium",
+      "note": "Company website self-reports 50+ skilled employees; LinkedIn shows 51-200; exact current count is not publicly verified."
+    },
+    "public_metrics": {
+      "projects_completed": "145+",
+      "satisfied_clients": "113+",
+      "skilled_employees": "50+",
+      "employee_retention": "90%",
+      "confidence": "medium",
+      "note": "Metrics are self-reported on public company pages."
+    },
     "services": [
-      "Custom Software Development",
-      "Web Application Development",
-      "AI & Chatbot Integration",
       "IT Staff Augmentation",
-      "Startup IT Services",
-      "Data Engineering"
-    ]
+      "IT Services for Startups",
+      "MVP Development",
+      "End-to-End Tech Support",
+      "Custom Software Development",
+      "Software Development Services",
+      "Web Application Development",
+      "Web Development",
+      "eCommerce Development",
+      "Customized Software Development",
+      "Software Project Management",
+      "Platform Engineering",
+      "Mobile App Development",
+      "Data Engineering",
+      "Data Scraping",
+      "AI/ML Engineering",
+      "Digital Transformation",
+      "Digital Marketing"
+    ],
+    "technologies": {
+      "core_public_stack": [
+        "C#",
+        ".NET",
+        ".NET Core",
+        "SQL Server",
+        "React",
+        "Next.js",
+        "Python",
+        "FastAPI",
+        "Django",
+        "Flask",
+        "PostgreSQL",
+        "AWS",
+        "Azure",
+        "GCP",
+        "Docker",
+        "Kubernetes",
+        "Microservices",
+        "Domain-Driven Design",
+        "Event-Driven Architecture",
+        "GraphQL",
+        "Kafka",
+        "RabbitMQ",
+        "Amazon SQS",
+        "Observability Tools"
+      ],
+      "data_and_ai_stack": [
+        "Data Pipelines",
+        "ETL",
+        "Power BI",
+        "Tableau",
+        "Mixpanel",
+        "TensorFlow",
+        "PyTorch",
+        "Scrapy",
+        "BeautifulSoup",
+        "AI/ML Models",
+        "Computer Vision"
+      ],
+      "historical_or_secondary_stack": [
+        "Node.js",
+        "ReactJS",
+        "AngularJS",
+        "VueJS",
+        "React Native",
+        "Laravel",
+        "PHP",
+        "Customized ERP",
+        "Automation"
+      ],
+      "internal_only_or_unverified": [
+        {
+          "name": "Groq",
+          "status": "not_publicly_verified"
+        },
+        {
+          "name": "OpenRouter",
+          "status": "not_publicly_verified"
+        },
+        {
+          "name": "MERN Stack",
+          "status": "possible_but_not_complete_public_picture",
+          "note": "WeyBee should not be described as only a MERN company because public hiring and services show strong .NET, Python, SQL, cloud, data, and AI focus."
+        }
+      ]
+    },
+    "industries_served": [
+      "E-commerce",
+      "Health Tech",
+      "Aggregators",
+      "FMCG",
+      "Manufacturing",
+      "Real Estate",
+      "Gems and Jewellery",
+      "Hygiene",
+      "Fitness and Wellness"
+    ],
+    "case_study_themes": [
+      "Art-market insights platform",
+      "AI-powered IVF decision-support system",
+      "Watch-market insights platform",
+      "AI-driven early detection for developmental delays",
+      "Multi-channel e-commerce platform",
+      "AI-powered digital-marketing automation platform"
+    ],
+    "market_presence": {
+      "linkedin": {
+        "industry": "IT Services and IT Consulting",
+        "size_band": "51-200 employees",
+        "company_type": "Privately Held"
+      },
+      "the_manifest": {
+        "rating": "4.6/5",
+        "minimum_project_size": "$1,000+",
+        "employee_band": "50-249"
+      },
+      "glassdoor": {
+        "rating_range": "4.5-4.6/5",
+        "review_count_note": "Dozens of reviews visible publicly"
+      },
+      "goodfirms": {
+        "rating": "5.0/5",
+        "note": "Metadata conflicts with legal founding year and size signals, so use carefully."
+      }
+    },
+    "hiring_signals_2026": {
+      "active_hiring": true,
+      "roles_seen": [
+        "AI-First Full Stack Developer (.NET)",
+        "Senior Python Backend Engineer – Computer Vision & AI",
+        "Sr. Python Backend Developer / Tech Lead",
+        "Data Analyst Lead",
+        "Associate Software Architect",
+        "Internship roles"
+      ],
+      "dominant_hiring_stack": [
+        ".NET",
+        "C#",
+        "SQL Server",
+        "Python",
+        "FastAPI",
+        "Django",
+        "Flask",
+        "PostgreSQL",
+        "React",
+        "Next.js",
+        "Cloud",
+        "Data Analytics",
+        "AI",
+        "Computer Vision"
+      ]
+    },
+    "related_entities": [
+      {
+        "name": "Social Sparsh",
+        "relationship": "closely_related_unconfirmed",
+        "description": "AI-powered digital marketing platform/company with public address and people-signal overlap.",
+        "status": "needs_internal_confirmation",
+        "possible_relationships": [
+          "Product line",
+          "Sister company",
+          "Division"
+        ]
+      },
+      {
+        "name": "Codiqa",
+        "relationship": "unclear_public_reference",
+        "status": "needs_cleanup_or_internal_confirmation",
+        "note": "Codiqa footer references appear in public WeyBee pages and may confuse AI/search retrieval."
+      }
+    ],
+    "data_quality_risks": [
+      "Founder/co-founder titles conflict across public sources.",
+      "Exact HR person needs internal confirmation.",
+      "Exact employee count is not publicly verified.",
+      "Some third-party sources show 2013, while legal incorporation is 2019.",
+      "Ahmedabad office address may have stale search results.",
+      "WeyBee pages contain repeated Social Sparsh labels and Codiqa footer references.",
+      "Some public pages contain visible typos and placeholder marketing text.",
+      "Groq and OpenRouter are not publicly verified technologies for WeyBee."
+    ],
+    "ai_answering_rules": {
+      "safe_public_answer": {
+        "founder": "Public sources conflict on founder/co-founder titles. Legal records show Vrunda Harshit Vakil and Dipti Hiren Kotadiya as directors.",
+        "employee_count": "WeyBee publicly states 50+ employees; LinkedIn shows 51-200. Exact count is not publicly verified.",
+        "tech_stack": "WeyBee works across .NET, Python, React/Next.js, SQL, cloud, data engineering, and AI/ML. It should not be described as only a MERN company.",
+        "contact": "Use info@weybee.com for general contact and hr@weybee.com for hiring-related contact."
+      },
+      "avoid_claims": [
+        "Do not say Groq or OpenRouter are used publicly unless internally confirmed.",
+        "Do not hardcode one founder name as verified.",
+        "Do not claim exact employee count.",
+        "Do not treat Social Sparsh as definitely a division unless internally confirmed."
+      ]
+    },
+    "confidence_summary": {
+      "high_confidence": [
+        "Legal name",
+        "CIN",
+        "Incorporation date",
+        "Registered directors",
+        "Public website",
+        "General contact email",
+        "Public service categories"
+      ],
+      "medium_confidence": [
+        "Employee count as 50+",
+        "Khushali Shah as HR signal",
+        "Public tech stack from careers and services",
+        "LinkedIn size band",
+        "Market reputation signals"
+      ],
+      "low_or_unresolved_confidence": [
+        "Exact founder/co-founder structure",
+        "Exact current HR person",
+        "Exact current employee count",
+        "Social Sparsh relationship type",
+        "Codiqa relationship/reference meaning"
+      ]
+    }
   }
 }

@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/User');
 const ActivityLog = require('../models/ActivityLog');
 const Contact = require('../models/Contact');
+const Knowledge = require('../models/Knowledge');
 const { auth, authorize } = require('../middleware/auth');
 
 const router = express.Router();
@@ -151,6 +152,27 @@ router.get('/contacts', auth, authorize('admin', 'manager'), async (req, res) =>
   try {
     const contacts = await Contact.find().sort('-createdAt');
     res.json(contacts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/admin/knowledge - Get all dynamic knowledge entries
+router.get('/knowledge', auth, authorize('admin', 'developer'), async (req, res) => {
+  try {
+    const records = await Knowledge.find().sort({ createdAt: -1 });
+    res.json(records);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT /api/admin/knowledge/:id - Verify/Edit a knowledge entry
+router.put('/knowledge/:id', auth, authorize('admin', 'developer'), async (req, res) => {
+  try {
+    const { answer, isVerified } = req.body;
+    const record = await Knowledge.findByIdAndUpdate(req.params.id, { answer, isVerified }, { new: true });
+    res.json(record);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

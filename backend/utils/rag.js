@@ -1,6 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const companyKnowledge = require('../data/company_knowledge.json');
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
+const cheerio = require("cheerio");
+const companyKnowledge = require("../data/company_knowledge.json");
+const Knowledge = require("../models/Knowledge");
 
 // Get all files from a directory
 function getAllFiles(dirPath, filesArray = []) {
@@ -12,7 +15,11 @@ function getAllFiles(dirPath, filesArray = []) {
     if (fs.statSync(fullPath).isDirectory()) {
       filesArray = getAllFiles(fullPath, filesArray);
     } else {
-      if (fullPath.endsWith('.html') || fullPath.endsWith('.txt') || fullPath.endsWith('.md')) {
+      if (
+        fullPath.endsWith(".html") ||
+        fullPath.endsWith(".txt") ||
+        fullPath.endsWith(".md")
+      ) {
         filesArray.push(fullPath);
       }
     }
@@ -20,37 +27,41 @@ function getAllFiles(dirPath, filesArray = []) {
   return filesArray;
 }
 
-const ROOT_DIR = path.resolve(__dirname, '../../');
+const ROOT_DIR = path.resolve(__dirname, "../../");
 
-function loadDocuments() {
+function loadLocalDocuments() {
   const documents = [];
 
   // Manual Knowledge
   documents.push({
-    source: 'manual_knowledge',
-    content: JSON.stringify(companyKnowledge.company_knowledge, null, 2)
+    source: "manual_knowledge",
+    content: JSON.stringify(companyKnowledge.company_knowledge, null, 2),
   });
 
-  const dirsToScan = ['page_sources'];
+  const dirsToScan = ["page_sources"];
   for (const dir of dirsToScan) {
     const fullDir = path.join(ROOT_DIR, dir);
     const files = getAllFiles(fullDir);
     for (const file of files) {
       documents.push({
-        source: file.replace(ROOT_DIR, ''),
-        content: fs.readFileSync(file, 'utf-8').slice(0, 5000) // limit to avoid massive files
+        source: file.replace(ROOT_DIR, ""),
+        content: fs.readFileSync(file, "utf-8").slice(0, 5000), // limit to avoid massive files
       });
     }
   }
 
   // Load root files
-  const rootFiles = ['layout_and_routes.md', 'pages_layout.txt', 'routes_info.txt'];
+  const rootFiles = [
+    "layout_and_routes.md",
+    "pages_layout.txt",
+    "routes_info.txt",
+  ];
   for (const rootFile of rootFiles) {
     const fullPath = path.join(ROOT_DIR, rootFile);
     if (fs.existsSync(fullPath)) {
       documents.push({
         source: rootFile,
-        content: fs.readFileSync(fullPath, 'utf-8').slice(0, 5000)
+        content: fs.readFileSync(fullPath, "utf-8").slice(0, 5000),
       });
     }
   }
@@ -59,15 +70,30 @@ function loadDocuments() {
 }
 
 // Very simple exact keyword match
-function searchKnowledgeBase(query) {
-  const documents = loadDocuments();
-  const keywords = query.toLowerCase().split(/[^\w]+/).filter(w => w.length > 3);
-  
+async function searchKnowledgeBase(query) {
+  const documents = loadLocalDocuments();
+
+  // Load from DB
+  const dbKnowledge = await Knowledge.find({});
+  dbKnowledge.forEach((k) => {
+    documents.push({
+      source: k.isVerified ? "db_verified" : "db_web_search",
+      content: `Q: ${k.question}\nA: ${k.answer}\n[Notice: ${k.isVerified ? "Verified by Admin" : "Unverified Web Search Data"}]`,
+    });
+  });
+
+  const keywords = query
+    .toLowerCase()
+    .split(/[^\w]+/)
+    .filter((w) => w.length > 3);
+
   if (keywords.length === 0) {
-    return documents.find(d => d.source === 'manual_knowledge')?.content || '';
+    return (
+      documents.find((d) => d.source === "manual_knowledge")?.content || ""
+    );
   }
 
-  const scoredDocs = documents.map(doc => {
+  const scoredDocs = documents.map((doc) => {
     let score = 0;
     const contentLower = doc.content.toLowerCase();
     for (const keyword of keywords) {
@@ -81,16 +107,62 @@ function searchKnowledgeBase(query) {
   scoredDocs.sort((a, b) => b.score - a.score);
 
   // Return the manual knowledge and top 2 highest scoring docs to fit into context window
-  const topDocs = scoredDocs.slice(0, 3).filter(d => d.score > 0);
-  
-  let manual = documents.find(d => d.source === 'manual_knowledge');
-  if (manual && !topDocs.find(d => d.source === 'manual_knowledge')) {
+  const topDocs = scoredDocs.slice(0, 3).filter((d) => d.score > 0);
+
+  let manual = documents.find((d) => d.source === "manual_knowledge");
+  if (manual && !topDocs.find((d) => d.source === "manual_knowledge")) {
     topDocs.unshift(manual);
   }
 
-  return topDocs.map(d => `--- SOURCE: ${d.source} ---\n${d.content}`).join(`\n\n`);
+  return topDocs
+    .map((d) => `--- SOURCE: ${d.source} ---\n${d.content}`)
+    .join(`\n\n`);
+}
+
+async function performWebSearch(query) {
+  try {
+    const searchUrl = "https://html.duckduckgo.com/html/";
+    const response = await axios.post(
+      searchUrl,
+      `q=${encodeURIComponent("WeyBee Solutions " + query)}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        },
+      },
+    );
+
+    const $ = cheerio.load(response.data);
+    let results = [];
+    $(".result__snippet").each((i, el) => {
+      if (i < 3) {
+        results.push($(el).text().trim());
+      }
+    });
+
+    if (results.length === 0) return null;
+
+    const combinedResult = results.join("\n");
+
+    // Save to DB
+    const newKnowledge = new Knowledge({
+      question: query,
+      answer: combinedResult,
+      source: "web_search",
+      isVerified: false,
+    });
+    await newKnowledge.save();
+
+    return combinedResult;
+  } catch (err) {   
+    console.error("Web search error", err.message);
+    return null;
+  }
 }
 
 module.exports = {
-  searchKnowledgeBase
+  searchKnowledgeBase,
+  performWebSearch,
 };
