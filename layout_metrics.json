@@ -1,0 +1,101 @@
+{
+  "buttons": [
+    {
+      "text": "Get in Touch Now",
+      "tag": "A",
+      "classes": "bt_bb_link",
+      "styles": {
+        "width": "240.812px",
+        "height": "46px",
+        "padding": "15px 45px",
+        "margin": "0px",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(86, 112, 251)",
+        "fontSize": "16px",
+        "fontWeight": "600",
+        "fontFamily": "sans-serif",
+        "borderRadius": "15px 0px 15px 15px",
+        "display": "flex",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "transition": "0.5s",
+        "animation": "none",
+        "boxShadow": "rgba(33, 33, 33, 0.07) 0px 20px 30px 0px",
+        "border": "0px none rgb(86, 112, 251)"
+      },
+      "rect": {}
+    },
+    {
+      "text": "IT Staff Augmentation",
+      "tag": "A",
+      "classes": "",
+      "styles": {
+        "width": "auto",
+        "height": "auto",
+        "padding": "0px",
+        "margin": "0px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "fontFamily": "\"Mona Sans\"",
+        "borderRadius": "0px",
+        "display": "inline",
+        "justifyContent": "normal",
+        "alignItems": "normal",
+        "transition": "opacity 0.2s",
+        "animation": "none",
+        "boxShadow": "none",
+        "border": "0px none rgb(255, 255, 255)"
+      },
+      "rect": {}
+    }
+  ],
+  "heroSection": {
+    "classes": "bt_bb_section bt_bb_color_scheme_1 bt_bb_layout_wide bt_bb_vertical_align_top bt_bb_top_spacing_none bt_bb_bottom_spacing_none",
+    "styles": {
+      "width": "1920px",
+      "height": "200px",
+      "padding": "0px",
+      "margin": "0px",
+      "backgroundColor": "rgb(86, 112, 251)",
+      "color": "rgb(255, 255, 255)",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "fontFamily": "\"Mona Sans\"",
+      "borderRadius": "0px",
+      "display": "block",
+      "justifyContent": "normal",
+      "alignItems": "normal",
+      "transition": "all",
+      "animation": "none",
+      "boxShadow": "none",
+      "border": "0px none rgb(255, 255, 255)"
+    },
+    "rect": {}
+  },
+  "navbar": {
+    "tag": "HEADER",
+    "classes": "mainHeader btClear gutter ",
+    "styles": {
+      "width": "1920px",
+      "height": "1550.31px",
+      "padding": "0px",
+      "margin": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "color": "rgb(255, 255, 255)",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "fontFamily": "Raleway, Arial, Helvetica, sans-serif",
+      "borderRadius": "0px",
+      "display": "block",
+      "justifyContent": "normal",
+      "alignItems": "normal",
+      "transition": "opacity 0.3s",
+      "animation": "none",
+      "boxShadow": "none",
+      "border": "0px none rgb(255, 255, 255)"
+    },
+    "rect": {}
+  }
+}
