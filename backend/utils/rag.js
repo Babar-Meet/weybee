@@ -85,7 +85,7 @@ async function searchKnowledgeBase(query) {
   const keywords = query
     .toLowerCase()
     .split(/[^\w]+/)
-    .filter((w) => w.length > 3);
+    .filter((w) => w.length > 1); // Reduced from 3 to 1 so keywords like 'hr' and 'it' get caught
 
   if (keywords.length === 0) {
     return (
@@ -106,12 +106,12 @@ async function searchKnowledgeBase(query) {
 
   scoredDocs.sort((a, b) => b.score - a.score);
 
-  // Return the manual knowledge and top 2 highest scoring docs to fit into context window
-  const topDocs = scoredDocs.slice(0, 3).filter((d) => d.score > 0);
+  // Return the manual knowledge and top 4 highest scoring docs to fit into context window
+  const topDocs = scoredDocs.slice(0, 4).filter((d) => d.score > 0);
 
   let manual = documents.find((d) => d.source === "manual_knowledge");
   if (manual && !topDocs.find((d) => d.source === "manual_knowledge")) {
-    topDocs.unshift(manual);
+    topDocs.unshift(manual); // Manual DB JSON ALWAYS first
   }
 
   return topDocs
@@ -122,9 +122,10 @@ async function searchKnowledgeBase(query) {
 async function performWebSearch(query) {
   try {
     const searchUrl = "https://html.duckduckgo.com/html/";
+    // Search both generally and specifically on their domain if possible, or just a comprehensive query
     const response = await axios.post(
       searchUrl,
-      `q=${encodeURIComponent("WeyBee Solutions " + query)}`,
+      `q=${encodeURIComponent("WeyBee Solutions OR site:weybee.com " + query)}`,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -137,7 +138,8 @@ async function performWebSearch(query) {
     const $ = cheerio.load(response.data);
     let results = [];
     $(".result__snippet").each((i, el) => {
-      if (i < 3) {
+      if (i < 5) {
+        // Increased to 5 snippets for more robust fallback
         results.push($(el).text().trim());
       }
     });
@@ -156,7 +158,7 @@ async function performWebSearch(query) {
     await newKnowledge.save();
 
     return combinedResult;
-  } catch (err) {   
+  } catch (err) {
     console.error("Web search error", err.message);
     return null;
   }
