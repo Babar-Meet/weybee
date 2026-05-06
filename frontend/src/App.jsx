@@ -22,6 +22,7 @@ import Careers from './pages/Careers';
 import ServiceDetail from './pages/ServiceDetail';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
+import SuccessStories from './pages/SuccessStories';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -37,7 +38,7 @@ function AnimatedRoutes() {
         <Route path="/it-services-for-startups" element={<ServiceDetail />} />
         <Route path="/software-development-services" element={<ServiceDetail />} />
         <Route path="/data-engineering" element={<ServiceDetail />} />
-        <Route path="/success-stories" element={<ServiceDetail />} />
+        <Route path="/success-stories" element={<SuccessStories />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>

@@ -106,24 +106,24 @@ const Home = () => {
       {/* ========== ABOUT WEYBEE ========== */}
       {sAbout && (
         <EditableSection pageSlug="home" sectionId="about">
-          <section style={{ padding: '100px 0', backgroundColor: sAbout.bgColor || '#f4f6fa' }}>
+          <section style={{ padding: '100px 0', backgroundColor: sAbout.bgColor || '#5670FB', color: '#fff' }}>
             <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '60px', flexWrap: 'wrap' }}>
               <motion.div style={{ flex: '1 1 500px' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-                <p style={{ color: 'var(--primary-color)', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '10px', fontSize: '14px' }}>{sAbout.subheading}</p>
-                <h2 style={{ fontSize: '2.8rem', marginBottom: '20px' }}>{sAbout.heading}</h2>
-                <p style={{ color: '#555', lineHeight: 1.8, marginBottom: '30px', fontSize: '1.05rem' }}>{sAbout.text}</p>
+                <p style={{ color: '#FFD700', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '10px', fontSize: '14px' }}>{sAbout.subheading}</p>
+                <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: '#fff' }}>{sAbout.heading}</h2>
+                <p style={{ color: '#e0e0e0', lineHeight: 1.8, marginBottom: '30px', fontSize: '1.05rem' }}>{sAbout.text}</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
                   {sAbout.items?.map((item, i) => (
                     <div key={i}>
-                      <h3 style={{ color: 'var(--primary-color)', fontSize: '2.2rem', marginBottom: '5px' }}>{item.title}</h3>
-                      <p style={{ color: '#666' }}>{item.description}</p>
+                      <h3 style={{ color: '#FFD700', fontSize: '2.2rem', marginBottom: '5px' }}>{item.title}</h3>
+                      <p style={{ color: '#e0e0e0' }}>{item.description}</p>
                     </div>
                   ))}
                 </div>
-                <Link to="/about-us" className="btn btn-solid" style={{ padding: '14px 35px' }}>Know More</Link>
+                <Link to="/about-us" className="btn" style={{ padding: '14px 35px', background: '#fff', color: 'var(--primary-color)', fontWeight: 600, borderRadius: '25px' }}>About us</Link>
               </motion.div>
               <motion.div style={{ flex: '1 1 450px' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-                <img src={sAbout.image} alt="About WeyBee" style={{ width: '100%', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }} />
+                <img src={sAbout.image} alt="About WeyBee" style={{ width: '100%', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }} />
               </motion.div>
             </div>
           </section>
