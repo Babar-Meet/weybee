@@ -1,28 +1,34 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
-import './index.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import "./index.css";
 
 // Context
-import { AuthProvider } from './context/AuthContext';
-import { TrackingProvider } from './context/TrackingContext';
-import { EditProvider } from './context/EditContext';
+import { AuthProvider } from "./context/AuthContext";
+import { TrackingProvider } from "./context/TrackingContext";
+import { EditProvider } from "./context/EditContext";
 
 // Components
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import ScrollToTop from './components/ScrollToTop';
-import SectionEditorModal from './components/SectionEditorModal';
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
+import SectionEditorModal from "./components/SectionEditorModal";
+import Chatbot from "./components/Chatbot";
 
 // Pages
-import Home from './pages/Home';
-import About from './pages/About';
-import Services from './pages/Services';
-import Contact from './pages/Contact';
-import Careers from './pages/Careers';
-import ServiceDetail from './pages/ServiceDetail';
-import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
-import SuccessStories from './pages/SuccessStories';
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Services from "./pages/Services";
+import Contact from "./pages/Contact";
+import Careers from "./pages/Careers";
+import ServiceDetail from "./pages/ServiceDetail";
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
+import SuccessStories from "./pages/SuccessStories";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -36,7 +42,10 @@ function AnimatedRoutes() {
         <Route path="/careers" element={<Careers />} />
         <Route path="/it-staff-augmentation" element={<ServiceDetail />} />
         <Route path="/it-services-for-startups" element={<ServiceDetail />} />
-        <Route path="/software-development-services" element={<ServiceDetail />} />
+        <Route
+          path="/software-development-services"
+          element={<ServiceDetail />}
+        />
         <Route path="/data-engineering" element={<ServiceDetail />} />
         <Route path="/success-stories" element={<SuccessStories />} />
         <Route path="/login" element={<Login />} />
@@ -48,7 +57,8 @@ function AnimatedRoutes() {
 
 function AppContent() {
   const location = useLocation();
-  const hideNavFooter = location.pathname === '/login' || location.pathname === '/admin';
+  const hideNavFooter =
+    location.pathname === "/login" || location.pathname === "/admin";
 
   return (
     <div className="App">
@@ -57,6 +67,7 @@ function AppContent() {
       <AnimatedRoutes />
       {!hideNavFooter && <Footer />}
       <SectionEditorModal />
+      <Chatbot />
     </div>
   );
 }

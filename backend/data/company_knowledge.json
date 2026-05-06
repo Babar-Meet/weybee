@@ -1,0 +1,21 @@
+{
+  "company_knowledge": {
+    "name": "Weybee",
+    "description": "IT services focused on modern full-stack development, AI integration, and scalable app architectures.",
+    "founder": "Verified Founder Name (Update this)",
+    "co_founder": "Verified Co-Founder Name (Update this)",
+    "hr": "Verified HR Name (Update this)",
+    "contact_email": "contact@weybee.com",
+    "contact_phone": "+1 234 567 8900",
+    "employee_count": "50+ employees (Update this)",
+    "technologies": ["MERN Stack", "React", "Node.js", "Express", "MongoDB", "AI Integrations", "Groq", "OpenRouter"],
+    "services": [
+      "Custom Software Development",
+      "Web Application Development",
+      "AI & Chatbot Integration",
+      "IT Staff Augmentation",
+      "Startup IT Services",
+      "Data Engineering"
+    ]
+  }
+}

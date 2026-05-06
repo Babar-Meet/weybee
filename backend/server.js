@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const contentRoutes = require('./routes/content');
 const trackRoutes = require('./routes/track');
+const chatbotRoutes = require('./routes/chatbot');
 
 // Seeders
 const seedContent = require('./seedContent');
@@ -71,6 +72,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/track', trackRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // Seed initial admin user
 async function seedAdmin() {
