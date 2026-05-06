@@ -8,29 +8,29 @@ export function usePageData(pageSlug) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Use static content immediately — zero network calls for public visitors
+    // Step 1: Render static content INSTANTLY (no blank screen, no spinner)
     const staticPage = staticContent[pageSlug];
     if (staticPage) {
       setPageData(staticPage);
       setLoading(false);
     }
 
-    // If user is logged in as dev/admin, also fetch latest from DB in background
-    // so they can see any recent edits that haven't been rebuilt yet
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.get(`/api/content/${pageSlug}`)
-        .then(res => {
-          if (res.data) {
-            setPageData(res.data);
-          }
-        })
-        .catch(() => {
-          // API failed — static data is already loaded, no problem
-        });
-    }
+    // Step 2: ALWAYS fetch latest from API in background (for all users)
+    // When dev edits content via CMS, this ensures visitors see it on next load
+    axios.get(`/api/content/${pageSlug}`)
+      .then(res => {
+        if (res.data) {
+          setPageData(res.data);  // Seamlessly swap in fresh data
+          setLoading(false);      // In case static was missing
+        }
+      })
+      .catch(() => {
+        // API failed (cold start, DB down, etc.) — static data already showing
+        // No error shown to user, they see the static version
+        setLoading(false);
+      });
 
-    return () => setPageData(null); // Cleanup on unmount
+    return () => setPageData(null);
   }, [pageSlug, setPageData]);
 
   const getSection = (sectionId) => {

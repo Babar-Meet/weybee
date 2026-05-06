@@ -21,9 +21,38 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// API Routes
+// ===== DB Connection (Serverless-safe) =====
+let isConnected = false;
+const connectDB = async () => {
+  if (isConnected) return;
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI environment variable is missing!");
+  }
+  try {
+    const db = await mongoose.connect(process.env.MONGO_URI);
+    isConnected = db.connections[0].readyState;
+    console.log('✅ Connected to MongoDB successfully!');
+    await seedAdmin();
+    await seedContent();
+  } catch (err) {
+    console.error('❌ Failed to connect to MongoDB:', err.message);
+    throw err; // Re-throw so the error handler catches it
+  }
+};
+
+// Ensure DB is connected BEFORE any API route runs
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ===== API Routes =====
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'API is running!', time: new Date().toISOString() });
+  res.json({ status: 'API is running!', time: new Date().toISOString(), dbConnected: isConnected });
 });
 
 // Contact form (public)
@@ -62,27 +91,14 @@ async function seedAdmin() {
   }
 }
 
-let isConnected = false;
-const connectDB = async () => {
-  if (isConnected) return;
-  if (!process.env.MONGO_URI) {
-    throw new Error("MONGO_URI environment variable is missing!");
-  }
-  try {
-    const db = await mongoose.connect(process.env.MONGO_URI);
-    isConnected = db.connections[0].readyState;
-    console.log('✅ Connected to MongoDB successfully!');
-    await seedAdmin();
-    await seedContent();
-  } catch (err) {
-    console.error('❌ Failed to connect to MongoDB:', err.message);
-  }
-};
-
-// Ensure DB is connected before processing any API route
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
+// ===== Global Error Handler =====
+app.use((err, req, res, next) => {
+  console.error('Global Error:', err.message);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: err.message,
+    mongoUriExists: !!process.env.MONGO_URI
+  });
 });
 
 const PORT = process.env.PORT || 5000;
@@ -93,17 +109,6 @@ if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 }
-
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error('Global Error:', err);
-  res.status(500).json({
-    error: 'Internal Server Error',
-    message: err.message,
-    mongoUriExists: !!process.env.MONGO_URI,
-    stack: process.env.NODE_ENV === 'production' ? null : err.stack
-  });
-});
 
 // Export the Express API
 module.exports = app;
