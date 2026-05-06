@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+// Centralized services menu data
 const servicesMenu = [
   {
     to: '/it-staff-augmentation', label: 'IT Staff Augmentation',
@@ -38,6 +39,29 @@ const servicesMenu = [
   }
 ];
 
+// Sub-item with ❯ arrow on hover
+const SubItem = ({ to, label }) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Link to={to}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'flex', alignItems: 'center', gap: '8px',
+        padding: '11px 22px',
+        color: hovered ? '#5670FB' : '#444',
+        fontSize: '13.5px', fontFamily: 'var(--font-heading)',
+        fontWeight: hovered ? 600 : 500,
+        transition: 'all 0.15s',
+        backgroundColor: hovered ? '#f7f8fc' : 'transparent'
+      }}
+    >
+      {hovered && <span style={{ color: '#5670FB', fontSize: '10px' }}>❯</span>}
+      <span>{label}</span>
+    </Link>
+  );
+};
+
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -45,7 +69,7 @@ const Navbar = () => {
   const { user, isAdmin, isManager, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const dropdownRef = useRef(null);
+  const closeTimer = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -53,7 +77,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdown on route change
   useEffect(() => {
     setServicesOpen(false);
     setActiveService(null);
@@ -75,6 +98,18 @@ const Navbar = () => {
   const serviceRoutes = servicesMenu.map(s => s.to);
   const isServiceActive = isActive('/services') || serviceRoutes.some(r => location.pathname === r);
 
+  const handleMenuEnter = () => {
+    clearTimeout(closeTimer.current);
+    setServicesOpen(true);
+  };
+
+  const handleMenuLeave = () => {
+    closeTimer.current = setTimeout(() => {
+      setServicesOpen(false);
+      setActiveService(null);
+    }, 150);
+  };
+
   const NavLink = ({ to, label }) => {
     const active = isActive(to);
     return (
@@ -82,9 +117,9 @@ const Navbar = () => {
         <Link to={to} style={{
           color: active ? activeColor : linkColor,
           fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '15px',
-          transition: 'color 0.3s', display: 'flex', alignItems: 'center', gap: '3px'
+          transition: 'color 0.3s', display: 'flex', alignItems: 'center', gap: '4px'
         }}>
-          {active && <span style={{ color: activeColor, fontSize: '12px' }}>❯</span>}
+          {active && <span style={{ fontSize: '11px' }}>❯</span>}
           {label}
         </Link>
       </li>
@@ -101,7 +136,6 @@ const Navbar = () => {
     }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
-        {/* Logo */}
         <Link to="/">
           <img
             src={scrolled ? "/assets/WeyBee-sticky-logo.png" : "/assets/WeyBee.png"}
@@ -110,88 +144,79 @@ const Navbar = () => {
           />
         </Link>
 
-        {/* Nav */}
         <nav>
           <ul style={{ display: 'flex', gap: '26px', listStyle: 'none', margin: 0, padding: 0, alignItems: 'center' }}>
             <NavLink to="/" label="Home" />
             <NavLink to="/about-us" label="About us" />
 
-            {/* Services Mega Dropdown */}
+            {/* ===== Services Mega Dropdown ===== */}
             <li
               style={{ position: 'relative' }}
-              onMouseEnter={() => setServicesOpen(true)}
-              onMouseLeave={() => { setServicesOpen(false); setActiveService(null); }}
-              ref={dropdownRef}
+              onMouseEnter={handleMenuEnter}
+              onMouseLeave={handleMenuLeave}
             >
               <span
                 onClick={() => navigate('/services')}
                 style={{
                   color: isServiceActive ? activeColor : linkColor,
                   fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '15px',
-                  transition: 'color 0.3s', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px'
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px',
+                  transition: 'color 0.3s'
                 }}
               >
-                {isServiceActive && <span style={{ color: activeColor, fontSize: '12px' }}>❯</span>}
+                {isServiceActive && <span style={{ fontSize: '11px' }}>❯</span>}
                 Services
               </span>
 
-              {/* Mega Dropdown */}
+              {/* Dropdown wrapper */}
               <div style={{
-                position: 'absolute', top: '100%', left: 0,
-                display: 'flex', gap: 0,
+                position: 'absolute', top: 'calc(100% + 4px)', left: '0', transform: `translateY(${servicesOpen ? '0' : '10px'})`,
+                display: 'flex', alignItems: 'flex-start',
                 opacity: servicesOpen ? 1 : 0,
                 visibility: servicesOpen ? 'visible' : 'hidden',
-                transform: servicesOpen ? 'translateY(8px)' : 'translateY(18px)',
-                transition: 'all 0.3s ease', zIndex: 999
+                transition: 'all 0.25s ease',
+                zIndex: 999,
+                pointerEvents: servicesOpen ? 'auto' : 'none'
               }}>
-                {/* Left column - services */}
+                {/* Left column */}
                 <div style={{
-                  backgroundColor: '#fff', minWidth: '280px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.12)', borderRadius: '10px 0 0 10px',
-                  padding: '12px 0'
+                  backgroundColor: '#fff', minWidth: '260px',
+                  boxShadow: '0 10px 40px rgba(0,0,0,0.12)', borderRadius: '12px 0 0 12px',
+                  padding: '10px 0', borderRight: '1px solid #f0f0f0'
                 }}>
                   {servicesMenu.map((service, i) => (
-                    <div
-                      key={i}
+                    <Link key={i} to={service.to}
                       onMouseEnter={() => setActiveService(i)}
-                      style={{ position: 'relative' }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '8px',
+                        padding: '13px 22px',
+                        color: activeService === i ? '#5670FB' : '#333',
+                        fontSize: '14px', fontFamily: 'var(--font-heading)',
+                        fontWeight: activeService === i ? 600 : 500,
+                        transition: 'all 0.15s',
+                        backgroundColor: activeService === i ? '#f7f8fc' : 'transparent'
+                      }}
                     >
-                      <Link to={service.to} style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                        padding: '14px 24px', color: activeService === i ? '#5670FB' : '#333',
-                        fontSize: '14px', fontFamily: 'var(--font-heading)', fontWeight: activeService === i ? 600 : 500,
-                        transition: 'all 0.2s',
-                        backgroundColor: activeService === i ? '#f4f6fa' : 'transparent',
-                        borderLeft: location.pathname === service.to ? '3px solid #5670FB' : '3px solid transparent'
-                      }}>
-                        {activeService === i && <span style={{ color: '#5670FB', fontSize: '11px', marginRight: '6px' }}>❯</span>}
-                        {service.label}
-                      </Link>
-                    </div>
+                      {activeService === i && <span style={{ color: '#5670FB', fontSize: '10px' }}>❯</span>}
+                      <span>{service.label}</span>
+                    </Link>
                   ))}
                 </div>
 
                 {/* Right column - sub-items */}
-                {activeService !== null && servicesMenu[activeService].children && (
-                  <div style={{
-                    backgroundColor: '#fff', minWidth: '240px',
-                    boxShadow: '10px 10px 30px rgba(0,0,0,0.08)', borderRadius: '0 10px 10px 0',
-                    padding: '12px 0', borderLeft: '1px solid #f0f0f0'
-                  }}>
-                    {servicesMenu[activeService].children.map((child, j) => (
-                      <Link key={j} to={child.to} style={{
-                        display: 'block', padding: '12px 24px', color: '#333',
-                        fontSize: '14px', fontFamily: 'var(--font-heading)', fontWeight: 500,
-                        transition: 'all 0.2s'
-                      }}
-                        onMouseEnter={e => { e.target.style.backgroundColor = '#f4f6fa'; e.target.style.color = '#5670FB'; }}
-                        onMouseLeave={e => { e.target.style.backgroundColor = 'transparent'; e.target.style.color = '#333'; }}
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                <div style={{
+                  backgroundColor: '#fff', minWidth: '220px',
+                  boxShadow: '10px 10px 40px rgba(0,0,0,0.08)',
+                  borderRadius: '0 12px 12px 0',
+                  padding: '10px 0',
+                  opacity: activeService !== null ? 1 : 0,
+                  visibility: activeService !== null ? 'visible' : 'hidden',
+                  transition: 'opacity 0.15s ease'
+                }}>
+                  {activeService !== null && servicesMenu[activeService]?.children?.map((child, j) => (
+                    <SubItem key={j} to={child.to} label={child.label} />
+                  ))}
+                </div>
               </div>
             </li>
 
@@ -199,15 +224,14 @@ const Navbar = () => {
             <NavLink to="/careers" label="Careers" />
             <NavLink to="/contact-us" label="Contact" />
 
-            {/* Auth */}
             {!user ? (
               <li>
                 <Link to="/login" style={{
                   color: isActive('/login') ? activeColor : linkColor,
                   fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '15px',
-                  display: 'flex', alignItems: 'center', gap: '3px'
+                  display: 'flex', alignItems: 'center', gap: '4px'
                 }}>
-                  {isActive('/login') && <span style={{ color: activeColor, fontSize: '12px' }}>❯</span>}
+                  {isActive('/login') && <span style={{ fontSize: '11px' }}>❯</span>}
                   Login
                 </Link>
               </li>
@@ -216,7 +240,7 @@ const Navbar = () => {
                 {(isAdmin || isManager) && (
                   <li>
                     <Link to="/admin" style={{ color: linkColor, fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '15px' }}>
-                      {isActive('/admin') && <span style={{ color: activeColor, fontSize: '12px', marginRight: '3px' }}>❯</span>}
+                      {isActive('/admin') && <span style={{ color: activeColor, fontSize: '11px', marginRight: '3px' }}>❯</span>}
                       Dashboard
                     </Link>
                   </li>
@@ -231,11 +255,10 @@ const Navbar = () => {
           </ul>
         </nav>
 
-        {/* CTA */}
         <Link to="/contact-us" className="btn" style={{
           padding: '10px 28px', fontSize: '14px', fontWeight: 600,
-          backgroundColor: scrolled ? activeColor : '#fff',
-          color: scrolled ? '#fff' : activeColor,
+          backgroundColor: scrolled ? '#5670FB' : '#fff',
+          color: scrolled ? '#fff' : '#5670FB',
           borderRadius: '25px', border: 'none', transition: 'all 0.3s'
         }}>
           Let's Talk

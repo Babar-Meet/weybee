@@ -118,3 +118,33 @@ a {
 .nav-links a:hover {
   color: var(--primary-color);
 }
+
+ /* Google Maps Developer Mode CSS Hacks */
+.gm-err-container,
+.gm-err-content,
+.gm-err-icon,
+.gm-err-title,
+.gm-err-message,
+.dismissButton {
+  display: none !important;
+}
+
+.gm-style-cc {
+  display: none !important;
+}
+
+/* Hide the dark overlay */
+.gm-style div[style*="background-color: rgba(0, 0, 0, 0.4)"] {
+  display: none !important;
+}
+
+/* Hide the repeating watermark text overlay */
+.gm-style div[style*="pointer-events: none"][style*="z-index: 100"] {
+  display: none !important;
+}
+
+/* Hide any detached error dialogs */
+div[style*="z-index: 1000000"], 
+div[style*="z-index: 1000001"] {
+  display: none !important;
+}

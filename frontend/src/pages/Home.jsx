@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { usePageData } from '../hooks/usePageData';
 import EditableSection from '../components/EditableSection';
 import { SkeletonPage } from '../components/SkeletonLoader';
+import CountUp from '../components/CountUp';
+import { getIcon } from '../components/WhyWeyBeeIcons';
 
 const pageV = {
   initial: { opacity: 0 },
@@ -59,7 +61,7 @@ const Home = () => {
         </EditableSection>
       )}
 
-      {/* ========== SECOND HERO ========== */}
+      {/* ========== SECOND HERO / DESCRIPTION ========== */}
       {sHero2 && (
         <EditableSection pageSlug="home" sectionId="hero-2">
           <section style={{ backgroundColor: sHero2.bgColor || 'var(--primary-color)', color: '#fff', padding: '0 0 80px 0' }}>
@@ -106,24 +108,46 @@ const Home = () => {
       {/* ========== ABOUT WEYBEE ========== */}
       {sAbout && (
         <EditableSection pageSlug="home" sectionId="about">
-          <section style={{ padding: '100px 0', backgroundColor: sAbout.bgColor || '#5670FB', color: '#fff' }}>
-            <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '60px', flexWrap: 'wrap' }}>
-              <motion.div style={{ flex: '1 1 500px' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-                <p style={{ color: '#FFD700', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '10px', fontSize: '14px' }}>{sAbout.subheading}</p>
-                <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: '#fff' }}>{sAbout.heading}</h2>
-                <p style={{ color: '#e0e0e0', lineHeight: 1.8, marginBottom: '30px', fontSize: '1.05rem' }}>{sAbout.text}</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
+          <section style={{ padding: '100px 0', backgroundColor: '#5670FB', color: '#fff', position: 'relative', overflow: 'hidden' }}>
+            {/* Decorative background shapes */}
+            <div style={{ position: 'absolute', right: '-8%', top: '-15%', width: '350px', height: '350px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
+            <div style={{ position: 'absolute', left: '-5%', bottom: '-20%', width: '250px', height: '250px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
+
+            <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '60px', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+              {/* Left - Text + Stats */}
+              <motion.div style={{ flex: '1 1 520px' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+                <p style={{ color: 'rgba(255,255,255,0.6)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', fontSize: '13px' }}>{sAbout.subheading}</p>
+                <h2 style={{ fontSize: '3rem', marginBottom: '20px', color: '#fff', fontWeight: 700 }}>{sAbout.heading}</h2>
+                <p style={{ color: 'rgba(255,255,255,0.85)', lineHeight: 1.8, marginBottom: '35px', fontSize: '1.05rem' }}>{sAbout.text}</p>
+
+                {/* Stats with CountUp Animation */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '25px', marginBottom: '35px' }}>
                   {sAbout.items?.map((item, i) => (
-                    <div key={i}>
-                      <h3 style={{ color: '#FFD700', fontSize: '2.2rem', marginBottom: '5px' }}>{item.title}</h3>
-                      <p style={{ color: '#e0e0e0' }}>{item.description}</p>
-                    </div>
+                    <motion.div key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.15, duration: 0.5 }}
+                      style={{ padding: '15px 0', borderLeft: '3px solid rgba(255,255,255,0.2)', paddingLeft: '15px' }}
+                    >
+                      <h3 style={{ color: '#FFD700', fontSize: '2.4rem', marginBottom: '4px', fontWeight: 700, fontFamily: 'var(--font-heading)' }}>
+                        <CountUp end={item.title} duration={2000 + (i * 300)} />
+                      </h3>
+                      <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', fontWeight: 500 }}>{item.description}</p>
+                    </motion.div>
                   ))}
                 </div>
-                <Link to="/about-us" className="btn" style={{ padding: '14px 35px', background: '#fff', color: 'var(--primary-color)', fontWeight: 600, borderRadius: '25px' }}>About us</Link>
+
+                <Link to="/about-us" className="btn" style={{
+                  padding: '14px 35px', background: '#fff', color: '#5670FB',
+                  fontWeight: 600, borderRadius: '15px 0 15px 15px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
+                }}>About us</Link>
               </motion.div>
-              <motion.div style={{ flex: '1 1 450px' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-                <img src={sAbout.image} alt="About WeyBee" style={{ width: '100%', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }} />
+
+              {/* Right - Image */}
+              <motion.div style={{ flex: '1 1 420px' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+                <img src={sAbout.image} alt="About WeyBee" style={{ width: '100%', display: 'block' }} />
               </motion.div>
             </div>
           </section>
@@ -143,7 +167,7 @@ const Home = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '35px' }}>
                 {sWhy.items?.map((card, i) => (
                   <motion.div key={i} style={{ padding: '30px', borderRadius: '12px', background: '#fff', border: '1px solid #f0f0f0', cursor: 'pointer', transition: 'all 0.4s' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.08 } } }} whileHover={{ y: -6, boxShadow: '0 12px 30px rgba(86,112,251,0.12)', borderColor: 'var(--primary-color)' }}>
-                    <div style={{ width: '60px', height: '60px', borderRadius: '12px', background: '#fef0ef', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', marginBottom: '20px' }}>{card.icon}</div>
+                    <div style={{ width: '60px', height: '60px', borderRadius: '12px', background: '#fef0ef', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', marginBottom: '20px' }}>{getIcon(card.icon)}</div>
                     <h4 style={{ marginBottom: '10px', fontSize: '1.1rem' }}>{card.title}</h4>
                     <p style={{ color: '#666', fontSize: '0.95rem', lineHeight: 1.6 }}>{card.description}</p>
                   </motion.div>
@@ -172,15 +196,57 @@ const Home = () => {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Product Engineering — matching original */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+                style={{ background: '#5670FB', borderRadius: '16px', padding: '50px', color: '#fff', display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
+                <div style={{ flex: '1 1 400px' }}>
+                  <h3 style={{ color: '#FFD700', fontSize: '1.8rem', marginBottom: '15px' }}>Product Engineering</h3>
+                  <p style={{ fontSize: '1.1rem', marginBottom: '10px', color: 'rgba(255,255,255,0.9)' }}>From the Concept to Innovation</p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {['Transform concepts into innovative products', 'Streamline development process for efficiency', 'Enhance continuous innovation and improvement', 'Implementing cutting-edge technologies for competitive advantage'].map((item, i) => (
+                      <li key={i} style={{ padding: '8px 0', color: 'rgba(255,255,255,0.85)', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <span style={{ color: '#00FA9A', fontSize: '14px' }}>✓</span> {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div style={{ flex: '1 1 300px', textAlign: 'center' }}>
+                  <Link to="/services" className="btn" style={{ padding: '14px 35px', background: '#fff', color: '#5670FB', fontWeight: 600, borderRadius: '15px 0 15px 15px', fontSize: '15px' }}>
+                    Explore Services
+                  </Link>
+                </div>
+              </motion.div>
             </div>
           </section>
         </EditableSection>
       )}
 
+      {/* ========== YOUTUBE / EXPERTISE ========== */}
+      <section style={{ padding: '100px 0', backgroundColor: '#fff', textAlign: 'center' }}>
+        <div className="container">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px' }}>Expertise</h2>
+          </motion.div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+            style={{ maxWidth: '800px', margin: '0 auto', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
+            <iframe
+              width="100%" height="450"
+              src="https://www.youtube.com/embed/JTMwgbEPxDo"
+              title="WeyBee Expertise"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ display: 'block' }}
+            />
+          </motion.div>
+        </div>
+      </section>
+
       {/* ========== TECHNOLOGY EXPERTISE ========== */}
       {sTech && (
         <EditableSection pageSlug="home" sectionId="technology">
-          <section style={{ padding: '100px 0', backgroundColor: sTech.bgColor || '#fff', textAlign: 'center' }}>
+          <section style={{ padding: '100px 0', backgroundColor: sTech.bgColor || '#f4f6fa', textAlign: 'center' }}>
             <div className="container">
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
                 <h2 style={{ fontSize: '2.5rem', marginBottom: '60px' }}>{sTech.heading}</h2>
@@ -198,7 +264,7 @@ const Home = () => {
       {/* ========== NEWSLETTER ========== */}
       {sNews && (
         <EditableSection pageSlug="home" sectionId="newsletter">
-          <section style={{ padding: '100px 0', backgroundColor: sNews.bgColor || '#f4f6fa' }}>
+          <section style={{ padding: '100px 0', backgroundColor: '#fff' }}>
             <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '50px', flexWrap: 'wrap' }}>
               <motion.div style={{ flex: '1 1 500px' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
                 <img src={sNews.image} alt="Newsletter" style={{ width: '100%', borderRadius: '20px' }} />

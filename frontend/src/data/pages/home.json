@@ -60,15 +60,15 @@
       "subheading": "Building Long-Term Relationships",
       "text": "Choosing the right technology partner is crucial for your success. At WeyBee, we combine expertise, innovation and commitment. Here's why you should choose us:",
       "items": [
-        { "title": "Dedicated Vetted Developers", "description": "Our experienced developers ensure exceptional results for your projects.", "icon": "🎓" },
-        { "title": "Transparent Operations", "description": "We maintain open communication, keeping you informed throughout the process.", "icon": "🔍" },
-        { "title": "Diverse Expertise", "description": "Our team specializes in IT staff augmentation, software development, digital marketing, and data engineering.", "icon": "🧩" },
-        { "title": "Long-Term Partnership", "description": "Average partnership of 3.5 years – we grow alongside your business.", "icon": "🤝" },
-        { "title": "Client Satisfaction", "description": "95% client satisfaction rate – delivering what we promise, consistently.", "icon": "😊" },
-        { "title": "Proven Growth", "description": "30% average profitability increase for our clients through optimized technology.", "icon": "📈" },
-        { "title": "Innovative Approach", "description": "We stay ahead of trends, integrating the latest tech to keep you competitive.", "icon": "💡" },
-        { "title": "Expert vetted Skilled Talent", "description": "Access a deep pool of certified professionals across all technology stacks.", "icon": "👨‍💻" },
-        { "title": "Strategic Partnership", "description": "We align with your business goals to deliver maximum ROI and strategic value.", "icon": "🎯" }
+        { "title": "Dedicated Vetted Developers", "description": "Our experienced developers ensure exceptional results for your projects.", "icon": "dedicated-developers" },
+        { "title": "Transparent Operations", "description": "We maintain open communication, keeping you informed throughout the process.", "icon": "transparent-operations" },
+        { "title": "Diverse Expertise", "description": "Our team specializes in IT staff augmentation, software development, digital marketing, and data engineering.", "icon": "diverse-expertise" },
+        { "title": "Long-Term Partnership", "description": "Average partnership of 3.5 years – we grow alongside your business.", "icon": "long-term-partnership" },
+        { "title": "Client Satisfaction", "description": "95% client satisfaction rate – delivering what we promise, consistently.", "icon": "client-satisfaction" },
+        { "title": "Proven Growth", "description": "30% average profitability increase for our clients through optimized technology.", "icon": "proven-growth" },
+        { "title": "Innovative Approach", "description": "We stay ahead of trends, integrating the latest tech to keep you competitive.", "icon": "innovative-approach" },
+        { "title": "Expert vetted Skilled Talent", "description": "Access a deep pool of certified professionals across all technology stacks.", "icon": "skilled-talent" },
+        { "title": "Strategic Partnership", "description": "We align with your business goals to deliver maximum ROI and strategic value.", "icon": "strategic-partnership" }
       ]
     },
     {

@@ -4,12 +4,14 @@ import home from './pages/home.json';
 import aboutUs from './pages/about-us.json';
 import contactUs from './pages/contact-us.json';
 import careers from './pages/careers.json';
+import successStories from './pages/success-stories.json';
 
 const staticContent = {
   'home': home,
   'about-us': aboutUs,
   'contact-us': contactUs,
-  'careers': careers
+  'careers': careers,
+  'success-stories': successStories
 };
 
 export default staticContent;

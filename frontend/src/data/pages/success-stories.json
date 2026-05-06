@@ -1,0 +1,23 @@
+{
+  "pageSlug": "success-stories",
+  "title": "Success Stories",
+  "isPublished": true,
+  "metaDescription": "Success Stories of businesses transformed by WeyBee Solutions Pvt Ltd. Explore how our IT services, web development, cloud solutions drive results.",
+  "hero": {
+    "heading": "Success Stories",
+    "text": "At WeyBee Solutions Pvt Ltd, we take pride in driving success for businesses across industries. With our expertise in IT services, web development, cloud solutions, and software consulting, we've empowered organizations to achieve their goals and scale new heights."
+  },
+  "featured": {
+    "name": "Social Sparsh",
+    "link": "https://socialsparsh.com/",
+    "description": "A comprehensive digital marketing platform built from the ground up, enabling Social Sparsh to manage multi-channel campaigns, track analytics, and scale their client base efficiently.",
+    "services": ["Web Development", "Custom Software", "Cloud Solutions"],
+    "image": "/assets/social-sparsh-featured.webp"
+  },
+  "stats": [
+    { "value": "145+", "label": "Projects Delivered" },
+    { "value": "113+", "label": "Happy Clients" },
+    { "value": "95%", "label": "Client Satisfaction" },
+    { "value": "6+", "label": "Industries Served" }
+  ]
+}
