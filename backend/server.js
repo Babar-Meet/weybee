@@ -79,8 +79,8 @@ async function seedAdmin() {
     if (!adminExists) {
       const admin = new User({
         name: 'Admin',
-        email: process.env.ADMIN_EMAIL || 'admin@weybee.com',
-        password: process.env.ADMIN_PASSWORD || 'admin123',
+        email: process.env.ADMIN_EMAIL,
+        password: process.env.ADMIN_PASSWORD,
         role: 'admin'
       });
       await admin.save();

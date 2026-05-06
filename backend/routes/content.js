@@ -7,18 +7,27 @@ const { auth, authorize } = require('../middleware/auth');
 const router = express.Router();
 
 // Trigger Vercel redeploy after content changes
-const DEPLOY_HOOK = process.env.VERCEL_DEPLOY_HOOK;
 function triggerRedeploy() {
-  if (!DEPLOY_HOOK) return;
-  try {
-    const url = new URL(DEPLOY_HOOK);
-    const req = https.request({ hostname: url.hostname, path: url.pathname + url.search, method: 'POST' });
-    req.on('error', (err) => console.error('Deploy hook error:', err.message));
-    req.end();
-    console.log('🚀 Triggered Vercel redeploy');
-  } catch (err) {
-    console.error('Deploy hook error:', err.message);
-  }
+  const DEPLOY_HOOK = process.env.VERCEL_DEPLOY_HOOK;
+  if (!DEPLOY_HOOK) return Promise.resolve();
+  
+  return new Promise((resolve) => {
+    try {
+      const url = new URL(DEPLOY_HOOK);
+      const req = https.request({ hostname: url.hostname, path: url.pathname + url.search, method: 'POST' }, (res) => {
+        console.log(`🚀 Vercel redeploy triggered: ${res.statusCode}`);
+        resolve();
+      });
+      req.on('error', (err) => {
+        console.error('Deploy hook error:', err.message);
+        resolve();
+      });
+      req.end();
+    } catch (err) {
+      console.error('Deploy hook error:', err.message);
+      resolve();
+    }
+  });
 }
 
 // GET /api/content/list - Admin: list all pages
@@ -51,7 +60,7 @@ router.put('/:pageSlug', auth, authorize('admin', 'manager', 'developer'), async
       updateData,
       { new: true, upsert: true }
     );
-    triggerRedeploy();
+    await triggerRedeploy();
     res.json(page);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -86,7 +95,7 @@ router.put('/:pageSlug/section/:sectionId', auth, authorize('admin', 'manager', 
       userAgent: req.headers['user-agent']
     });
 
-    triggerRedeploy();
+    await triggerRedeploy();
     res.json(page);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -102,7 +111,7 @@ router.post('/:pageSlug/section', auth, authorize('admin', 'manager', 'developer
     page.sections.push(req.body);
     page.lastEditedBy = req.user._id;
     await page.save();
-    triggerRedeploy();
+    await triggerRedeploy();
     res.json(page);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -118,7 +127,7 @@ router.delete('/:pageSlug/section/:sectionId', auth, authorize('admin', 'manager
     page.sections = page.sections.filter(s => s.sectionId !== req.params.sectionId);
     page.lastEditedBy = req.user._id;
     await page.save();
-    triggerRedeploy();
+    await triggerRedeploy();
     res.json(page);
   } catch (error) {
     res.status(500).json({ error: error.message });

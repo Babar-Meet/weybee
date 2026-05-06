@@ -30,9 +30,9 @@ echo   Both servers are booting up!
 echo   Backend: http://localhost:5000
 echo   Frontend: http://localhost:5173
 echo.
-echo   Default Admin Login:
-echo   Email: admin@weybee.com
-echo   Password: admin123
+echo ==============================================
+echo   Note: Admin credentials must be configured
+echo   in the backend/.env file securely.
 echo ==============================================
 echo.
 pause
