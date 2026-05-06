@@ -65,7 +65,9 @@ async function seedAdmin() {
 let isConnected = false;
 const connectDB = async () => {
   if (isConnected) return;
-  if (!process.env.MONGO_URI) return;
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI environment variable is missing!");
+  }
   try {
     const db = await mongoose.connect(process.env.MONGO_URI);
     isConnected = db.connections[0].readyState;
@@ -91,6 +93,17 @@ if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 }
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Global Error:', err);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: err.message,
+    mongoUriExists: !!process.env.MONGO_URI,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack
+  });
+});
 
 // Export the Express API
 module.exports = app;
