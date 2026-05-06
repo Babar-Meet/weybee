@@ -35,16 +35,16 @@ export function TrackingProvider({ children }) {
     // Fetch real IP and location
     if (!fetchedLocation.current) {
       fetchedLocation.current = true;
-      axios.get('http://ip-api.com/json/')
+      axios.get('https://ipapi.co/json/')
         .then(res => {
-          if (res.data.status === 'success') {
+          if (res.data.ip) {
             locationData.current = {
-              clientIp: res.data.query,
+              clientIp: res.data.ip,
               location: {
                 city: res.data.city,
-                region: res.data.regionName,
-                country: res.data.country,
-                isp: res.data.isp
+                region: res.data.region,
+                country: res.data.country_name,
+                isp: res.data.org
               }
             };
           }
