@@ -1,0 +1,26 @@
+{
+  "pageSlug": "contact-us",
+  "title": "Contact Us",
+  "isPublished": true,
+  "metaDescription": "Contact WeyBee for IT solutions and technology partnerships",
+  "sections": [
+    {
+      "sectionId": "hero",
+      "order": 0,
+      "bgColor": "#5670FB",
+      "heading": "Contact Us",
+      "text": "Reach out today, and let's discuss how we can accelerate your business growth with innovative technology solutions."
+    },
+    {
+      "sectionId": "offices",
+      "order": 1,
+      "bgColor": "#fff",
+      "heading": "Our Offices",
+      "items": [
+        { "title": "Rajkot, India", "description": "303, Nakshatra Heights, 150 Feet Ring Road, Rajkot, Gujarat", "icon": "+91 88660 08860" },
+        { "title": "Ahmedabad, India", "description": "1012, Aaron Spectra, Rajpath Rangoli Rd, Ahmedabad, Gujarat", "icon": "+91 88660 08860" },
+        { "title": "Sydney, Australia", "description": "WOTSO Pyrmont, 3/55 Pyrmont Bridge Rd, Pyrmont NSW 2009", "icon": "+61 2 8024 5936" }
+      ]
+    }
+  ]
+}

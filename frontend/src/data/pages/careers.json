@@ -1,0 +1,43 @@
+{
+  "pageSlug": "careers",
+  "title": "Careers",
+  "isPublished": true,
+  "metaDescription": "Join WeyBee - Explore career opportunities in IT",
+  "sections": [
+    {
+      "sectionId": "hero",
+      "order": 0,
+      "bgColor": "#5670FB",
+      "heading": "Careers at WeyBee",
+      "text": "We are more than just an IT services company — we are a community of thinkers, creators, and innovators."
+    },
+    {
+      "sectionId": "culture",
+      "order": 1,
+      "bgColor": "#f4f6fa",
+      "heading": "Our Culture",
+      "items": [
+        { "title": "Fun", "description": "We never miss a chance to come together and Celebrate. We celebrate Indian/Global Events & Festivals, organize Team Lunch, Outings, and play challenging indoor-games.", "icon": "🎉" },
+        { "title": "Learn", "description": "Our business growth inevitably gives opportunities to learn. Training Program, External Courses, LLM (Learn – Leverage – Master) to fast-track learning.", "icon": "📚" },
+        { "title": "Growth", "description": "We take responsibility of individual growth. We chart Career Growth for each achiever, coach life skills to navigate better in personal life.", "icon": "🚀" }
+      ]
+    },
+    {
+      "sectionId": "positions",
+      "order": 2,
+      "bgColor": "#fff",
+      "heading": "Open Positions",
+      "items": [
+        { "title": "Full Stack Developer (Vue.js / Python)" },
+        { "title": "AI-First Full Stack Developer (.NET)" },
+        { "title": "Sr. Python Backend Developer (Tech Lead)" },
+        { "title": "Data Analyst Lead" },
+        { "title": "Associate Software Architect" },
+        { "title": "Fullstack .Net Developer" },
+        { "title": "Digital Marketing Manager" },
+        { "title": "Senior Python Backend Engineer (AI/ML, Scalable Systems)" },
+        { "title": "Internship" }
+      ]
+    }
+  ]
+}

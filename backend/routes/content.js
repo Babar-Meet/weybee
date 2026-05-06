@@ -1,9 +1,25 @@
 const express = require('express');
+const https = require('https');
 const PageContent = require('../models/PageContent');
 const ActivityLog = require('../models/ActivityLog');
 const { auth, authorize } = require('../middleware/auth');
 
 const router = express.Router();
+
+// Trigger Vercel redeploy after content changes
+const DEPLOY_HOOK = process.env.VERCEL_DEPLOY_HOOK;
+function triggerRedeploy() {
+  if (!DEPLOY_HOOK) return;
+  try {
+    const url = new URL(DEPLOY_HOOK);
+    const req = https.request({ hostname: url.hostname, path: url.pathname + url.search, method: 'POST' });
+    req.on('error', (err) => console.error('Deploy hook error:', err.message));
+    req.end();
+    console.log('🚀 Triggered Vercel redeploy');
+  } catch (err) {
+    console.error('Deploy hook error:', err.message);
+  }
+}
 
 // GET /api/content/list - Admin: list all pages
 router.get('/list', auth, authorize('admin', 'manager', 'developer'), async (req, res) => {
@@ -35,6 +51,7 @@ router.put('/:pageSlug', auth, authorize('admin', 'manager', 'developer'), async
       updateData,
       { new: true, upsert: true }
     );
+    triggerRedeploy();
     res.json(page);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -69,6 +86,7 @@ router.put('/:pageSlug/section/:sectionId', auth, authorize('admin', 'manager', 
       userAgent: req.headers['user-agent']
     });
 
+    triggerRedeploy();
     res.json(page);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -84,6 +102,7 @@ router.post('/:pageSlug/section', auth, authorize('admin', 'manager', 'developer
     page.sections.push(req.body);
     page.lastEditedBy = req.user._id;
     await page.save();
+    triggerRedeploy();
     res.json(page);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -99,6 +118,7 @@ router.delete('/:pageSlug/section/:sectionId', auth, authorize('admin', 'manager
     page.sections = page.sections.filter(s => s.sectionId !== req.params.sectionId);
     page.lastEditedBy = req.user._id;
     await page.save();
+    triggerRedeploy();
     res.json(page);
   } catch (error) {
     res.status(500).json({ error: error.message });
