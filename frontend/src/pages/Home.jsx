@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { usePageData } from '../hooks/usePageData';
 import EditableSection from '../components/EditableSection';
+import { SkeletonPage } from '../components/SkeletonLoader';
 
 const pageV = {
   initial: { opacity: 0 },
@@ -16,7 +17,7 @@ const fadeUp = {
 const Home = () => {
   const { loading, getSection } = usePageData('home');
 
-  if (loading) return <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Loading...</div>;
+  if (loading) return <SkeletonPage />;
 
   const sHero = getSection('hero');
   const sHero2 = getSection('hero-2');
