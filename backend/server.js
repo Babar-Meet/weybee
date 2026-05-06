@@ -62,21 +62,28 @@ async function seedAdmin() {
   }
 }
 
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
+let isConnected = false;
+const connectDB = async () => {
+  if (isConnected) return;
+  if (!process.env.MONGO_URI) return;
+  try {
+    const db = await mongoose.connect(process.env.MONGO_URI);
+    isConnected = db.connections[0].readyState;
+    console.log('✅ Connected to MongoDB successfully!');
+    await seedAdmin();
+    await seedContent();
+  } catch (err) {
+    console.error('❌ Failed to connect to MongoDB:', err.message);
+  }
+};
 
-// For Vercel, we just connect when the file is loaded
-if (MONGO_URI) {
-  mongoose.connect(MONGO_URI)
-    .then(async () => {
-      console.log('✅ Connected to MongoDB successfully!');
-      await seedAdmin();
-      await seedContent();
-    })
-    .catch((err) => {
-      console.error('❌ Failed to connect to MongoDB:', err.message);
-    });
-}
+// Ensure DB is connected before processing any API route
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
+const PORT = process.env.PORT || 5000;
 
 // Only listen if not running on Vercel
 if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
