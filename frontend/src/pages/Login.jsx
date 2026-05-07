@@ -31,7 +31,13 @@ export default function Login() {
         navigate('/');
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Something went wrong.');
+      if (typeof err.response?.data?.error === 'string') {
+        setError(err.response.data.error);
+      } else if (typeof err.response?.data?.message === 'string') {
+        setError(err.response.data.message);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     }
     setLoading(false);
   };

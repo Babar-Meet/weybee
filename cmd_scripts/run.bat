@@ -4,25 +4,15 @@ echo   WeyBee-AI Full Stack Application Starter
 echo ==============================================
 echo.
 
-echo [1/3] Installing Backend Dependencies...
-cd backend
-call npm install
-cd ..
-
-echo [2/3] Installing Frontend Dependencies...
-cd frontend
-call npm install
-cd ..
-
-echo [3/3] Starting Servers...
+echo Starting Servers...
 echo.
 echo Starting Backend API on http://localhost:5000 ...
-start "WeyBee Backend (Port 5000)" cmd /c "cd backend && node server.js"
+start "WeyBee Backend (Port 5000)" cmd /c "cd ..\backend && node server.js"
 
 timeout /t 3 /nobreak > nul
 
 echo Starting Frontend on http://localhost:5173 ...
-start "WeyBee Frontend (Vite)" cmd /k "cd frontend && npm run dev"
+start "WeyBee Frontend (Vite)" cmd /k "cd ..\frontend && npm run dev"
 
 echo.
 echo ==============================================
@@ -31,8 +21,4 @@ echo   Backend: http://localhost:5000
 echo   Frontend: http://localhost:5173
 echo.
 echo ==============================================
-echo   Note: Admin credentials must be configured
-echo   in the backend/.env file securely.
-echo ==============================================
-echo.
 pause
