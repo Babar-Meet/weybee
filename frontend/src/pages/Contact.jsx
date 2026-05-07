@@ -61,7 +61,8 @@ export default function Contact() {
     e.preventDefault();
     try {
       setStatus('Sending...');
-      await axios.post('/api/contact', formData);
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      await axios.post(`${apiUrl}/contact`, formData);
       setStatus('Message sent successfully!');
       setFormData({ name: '', email: '', subject: '', message: '' });
       setTimeout(() => setStatus(''), 3000);
