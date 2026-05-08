@@ -28,29 +28,35 @@ router.post('/', async (req, res) => {
         return res.status(500).json({ error: 'Chatbot provider is not configured properly.' });
     }
 
-    let contextData = await searchKnowledgeBase(message);
-    
+    let contextData = "";
+    let messages = [];
+
     // Modify system prompt based on user web search preference
-    let dynamicSystemPrompt = SYSTEM_PROMPT;
     if (useWebSearch) {
-      // Direct instruction to use FLAG if missing
+      contextData = await searchKnowledgeBase(message);
+      
+      let dynamicSystemPrompt = SYSTEM_PROMPT;
       dynamicSystemPrompt = dynamicSystemPrompt.replace(
         '2. If verifiable information is NOT in the CONTEXT, you MUST reply EXACTLY with: "FLAG_MISSING_INFO"',
         '2. If verifiable information is NOT in the CONTEXT, you MUST reply EXACTLY with: "FLAG_MISSING_INFO"'
       );
-    } else {
-      // Do not use FLAG_MISSING_INFO if web search is off. Just reply gracefully.
-      dynamicSystemPrompt = dynamicSystemPrompt.replace(
-        '2. If verifiable information is NOT in the CONTEXT, you MUST reply EXACTLY with: "FLAG_MISSING_INFO"',
-        '2. If verifiable information is NOT in the CONTEXT, you MUST reply: "I do not have verified information about that in my knowledge base." Do NOT reply with FLAG_MISSING_INFO.'
-      );
-    }
 
-    let messages = [
-      { role: 'system', content: dynamicSystemPrompt + contextData },
-      ...(history || []),
-      { role: 'user', content: message }
-    ];
+      messages = [
+        { role: 'system', content: dynamicSystemPrompt + "\n" + contextData },
+        ...(history || []),
+        { role: 'user', content: message }
+      ];
+    } else {
+      // Normal Chatbot without RAG
+      const NORMAL_PROMPT = `You are a helpful company website assistant.
+Your primary role is to answer general questions friendly, but you do not have access to specific company database metrics right now. Be helpful, concise, and professional.`;
+      
+      messages = [
+        { role: 'system', content: NORMAL_PROMPT },
+        ...(history || []),
+        { role: 'user', content: message }
+      ];
+    }
 
     let chatCompletion = await groq.chat.completions.create({
       messages,
@@ -68,13 +74,13 @@ router.post('/', async (req, res) => {
       if (webResult) {
         contextData += `\n\n--- SOURCE: db_web_search ---\nQ: ${message}\nA: ${webResult}\n[Notice: Unverified Web Search Data]`;
         
-        dynamicSystemPrompt = SYSTEM_PROMPT.replace(
+        let dynamicSystemPrompt = SYSTEM_PROMPT.replace(
            '2. If verifiable information is NOT in the CONTEXT, you MUST reply EXACTLY with: "FLAG_MISSING_INFO"',
            '2. If verifiable information is NOT in the CONTEXT, you MUST reply: "I do not have verified information about that, and I couldn\'t find it online."'
         );
 
         messages = [
-          { role: 'system', content: dynamicSystemPrompt + contextData },
+          { role: 'system', content: dynamicSystemPrompt + "\n" + contextData },
           ...(history || []),
           { role: 'user', content: message }
         ];
@@ -94,7 +100,7 @@ router.post('/', async (req, res) => {
 
     res.json({
         answer: responseText,
-        sourcesMsg: contextData ? 'Checked company knowledge base' : null
+        sourcesMsg: useWebSearch ? 'Checked company knowledge base' : null
     });
   } catch (error) {
     console.error('Chatbot error:', error);

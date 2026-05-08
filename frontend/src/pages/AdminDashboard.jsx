@@ -16,6 +16,8 @@ export default function AdminDashboard() {
   const [logs, setLogs] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [visitorStats, setVisitorStats] = useState(null);
+  const [knowledge, setKnowledge] = useState([]);
+  const [newKnowledge, setNewKnowledge] = useState({ question: '', answer: '', isVerified: true });
   const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'user' });
   const [msg, setMsg] = useState('');
   const [selectedLog, setSelectedLog] = useState(null);
@@ -50,9 +52,34 @@ export default function AdminDashboard() {
         const res = await axios.get(`${API}/track/stats`);
         setVisitorStats(res.data);
       }
+      if (tab === 'knowledge' && (isAdmin || isManager)) {
+        const res = await axios.get(`${API}/admin/knowledge`);
+        setKnowledge(res.data);
+      }
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const createKnowledge = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API}/admin/knowledge`, newKnowledge);
+      setMsg('Knowledge added successfully!');
+      setNewKnowledge({ question: '', answer: '', isVerified: true });
+      fetchData();
+      setTimeout(() => setMsg(''), 3000);
+    } catch (err) {
+      setMsg(err.response?.data?.error || 'Failed to add knowledge.');
+    }
+  };
+
+  const deleteKnowledge = async (id) => {
+    if (!window.confirm('Delete this knowledge item?')) return;
+    try {
+      await axios.delete(`${API}/admin/knowledge/${id}`);
+      fetchData();
+    } catch (err) { console.error(err); }
   };
 
   const createUser = async (e) => {
@@ -120,6 +147,7 @@ export default function AdminDashboard() {
         {/* Tabs */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', flexWrap: 'wrap' }}>
           {(isAdmin || isManager) && <button style={tabStyle('overview')} onClick={() => setTab('overview')}>Overview</button>}
+          {(isAdmin || isManager) && <button style={tabStyle('knowledge')} onClick={() => setTab('knowledge')}>Knowledge Base</button>}
           {(isAdmin || isManager) && <button style={tabStyle('users')} onClick={() => setTab('users')}>Users</button>}
           <button style={tabStyle('activity')} onClick={() => setTab('activity')}>Activity Log</button>
           {(isAdmin || isManager) && <button style={tabStyle('contacts')} onClick={() => setTab('contacts')}>Contacts</button>}
@@ -177,6 +205,53 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
             </div>
+          </motion.div>
+        )}
+
+        {/* Knowledge Tab */}
+        {tab === 'knowledge' && (
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} style={{ background: '#fff', padding: '20px', borderRadius: '15px' }}>
+            <h2>Knowledge Base</h2>
+            <form onSubmit={createKnowledge} style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+              <input 
+                type="text" placeholder="Question / Concept" value={newKnowledge.question}
+                onChange={e => setNewKnowledge({ ...newKnowledge, question: e.target.value })}
+                required style={{ padding: '10px', width: '30%', borderRadius: '8px', border: '1px solid #ddd' }} 
+              />
+              <input 
+                type="text" placeholder="Answer / Details" value={newKnowledge.answer}
+                onChange={e => setNewKnowledge({ ...newKnowledge, answer: e.target.value })}
+                required style={{ padding: '10px', width: '50%', borderRadius: '8px', border: '1px solid #ddd' }} 
+              />
+              <button style={{ padding: '10px 20px', background: 'var(--primary-color)', color: '#fff', borderRadius: '8px', border: 'none' }}>Add</button>
+            </form>
+            {msg && <p style={{ color: 'green' }}>{msg}</p>}
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+              <thead>
+                <tr style={{ background: '#f8f9fa', textAlign: 'left' }}>
+                  <th style={{ padding: '12px', borderBottom: '2px solid #eee' }}>Question</th>
+                  <th style={{ padding: '12px', borderBottom: '2px solid #eee' }}>Answer</th>
+                  <th style={{ padding: '12px', borderBottom: '2px solid #eee' }}>Source</th>
+                  <th style={{ padding: '12px', borderBottom: '2px solid #eee' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {knowledge.map(k => (
+                  <tr key={k._id} style={{ borderBottom: '1px solid #eee' }}>
+                    <td style={{ padding: '12px' }}>{k.question}</td>
+                    <td style={{ padding: '12px' }}>{k.answer}</td>
+                    <td style={{ padding: '12px' }}>
+                       <span style={{ padding: '4px 8px', borderRadius: '20px', background: k.isVerified ? '#dcfce7' : '#fef9c3', color: k.isVerified ? '#166534' : '#854d0e', fontSize: '0.8rem' }}>
+                         {k.source}
+                       </span>
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      <button onClick={() => deleteKnowledge(k._id)} style={{ color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </motion.div>
         )}
 

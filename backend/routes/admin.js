@@ -9,6 +9,72 @@ const router = express.Router();
 
 // All admin routes require auth + admin or manager role
 
+// GET /api/admin/knowledge - List knowledge
+router.get('/knowledge', auth, authorize('admin', 'manager'), async (req, res) => {
+  try {
+    const knowledge = await Knowledge.find().sort('-createdAt');
+    res.json(knowledge);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/admin/knowledge - Add knowledge
+router.post('/knowledge', auth, authorize('admin', 'manager'), async (req, res) => {
+  try {
+    const { question, answer, isVerified } = req.body;
+    const knowledge = new Knowledge({ question, answer, isVerified, source: 'admin_gui' });
+    await knowledge.save();
+    
+    await ActivityLog.create({
+      userId: req.user._id,
+      action: 'knowledge_created',
+      details: `Added knowledge for question: ${question}`,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
+    });
+    res.status(201).json(knowledge);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT /api/admin/knowledge/:id
+router.put('/knowledge/:id', auth, authorize('admin', 'manager'), async (req, res) => {
+  try {
+    const { isVerified, answer } = req.body;
+    const knowledge = await Knowledge.findByIdAndUpdate(req.params.id, { isVerified, answer }, { returnDocument: 'after' });
+    
+    await ActivityLog.create({
+      userId: req.user._id,
+      action: 'knowledge_updated',
+      details: `Updated knowledge entry ${req.params.id}`,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
+    });
+    res.json(knowledge);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// DELETE /api/admin/knowledge/:id
+router.delete('/knowledge/:id', auth, authorize('admin', 'manager'), async (req, res) => {
+  try {
+    await Knowledge.findByIdAndDelete(req.params.id);
+    await ActivityLog.create({
+      userId: req.user._id,
+      action: 'knowledge_deleted',
+      details: `Deleted knowledge entry ${req.params.id}`,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
+    });
+    res.json({ message: 'Deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // GET /api/admin/stats - Dashboard stats
 router.get('/stats', auth, authorize('admin', 'manager'), async (req, res) => {
   try {
@@ -89,7 +155,7 @@ router.put('/users/:id', auth, authorize('admin'), async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { name, email, role, isActive },
-      { new: true }
+      { returnDocument: 'after' }
     ).select('-password');
 
     if (!user) return res.status(404).json({ error: 'User not found.' });
@@ -171,7 +237,7 @@ router.get('/knowledge', auth, authorize('admin', 'developer'), async (req, res)
 router.put('/knowledge/:id', auth, authorize('admin', 'developer'), async (req, res) => {
   try {
     const { answer, isVerified } = req.body;
-    const record = await Knowledge.findByIdAndUpdate(req.params.id, { answer, isVerified }, { new: true });
+    const record = await Knowledge.findByIdAndUpdate(req.params.id, { answer, isVerified }, { returnDocument: 'after' });
     res.json(record);
   } catch (error) {
     res.status(500).json({ error: error.message });

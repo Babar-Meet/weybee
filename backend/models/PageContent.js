@@ -26,6 +26,4 @@ const pageContentSchema = new mongoose.Schema({
   lastEditedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true, strict: false });
 
-pageContentSchema.index({ pageSlug: 1 });
-
 module.exports = mongoose.model('PageContent', pageContentSchema);

@@ -112,7 +112,7 @@ const Chatbot = () => {
                   checked={useWebSearch}
                   onChange={(e) => setUseWebSearch(e.target.checked)}
                 />
-                Extensive Web Search
+                Extensive Search
               </label>
             </div>
             <div className="chatbot-input-row">

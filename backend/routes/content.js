@@ -58,7 +58,7 @@ router.put('/:pageSlug', auth, authorize('admin', 'manager', 'developer'), async
     const page = await PageContent.findOneAndUpdate(
       { pageSlug: req.params.pageSlug },
       updateData,
-      { new: true, upsert: true }
+      { returnDocument: 'after', upsert: true }
     );
     await triggerRedeploy();
     res.json(page);
