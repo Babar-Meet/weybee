@@ -5,6 +5,8 @@ const Contact = require('../models/Contact');
 const Knowledge = require('../models/Knowledge');
 const { auth, authorize } = require('../middleware/auth');
 
+const { loadLocalDocuments } = require('../utils/rag');
+
 const router = express.Router();
 
 // All admin routes require auth + admin or manager role
@@ -12,8 +14,20 @@ const router = express.Router();
 // GET /api/admin/knowledge - List knowledge
 router.get('/knowledge', auth, authorize('admin', 'manager'), async (req, res) => {
   try {
-    const knowledge = await Knowledge.find().sort('-createdAt');
-    res.json(knowledge);
+    const dbKnowledge = await Knowledge.find().sort('-createdAt').lean();
+    
+    // Also attach local read-only knowledge files so admin can view them
+    const localDocs = loadLocalDocuments();
+    const localDocsFormatted = localDocs.map((doc, idx) => ({
+      _id: `local_file_${idx}`,
+      question: `Local File: ${doc.source}`,
+      answer: doc.content.substring(0, 500) + '...', // truncate for display
+      source: 'local_file',
+      isVerified: true,
+      readOnly: true
+    }));
+
+    res.json([...dbKnowledge, ...localDocsFormatted]);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -42,8 +56,8 @@ router.post('/knowledge', auth, authorize('admin', 'manager'), async (req, res) 
 // PUT /api/admin/knowledge/:id
 router.put('/knowledge/:id', auth, authorize('admin', 'manager'), async (req, res) => {
   try {
-    const { isVerified, answer } = req.body;
-    const knowledge = await Knowledge.findByIdAndUpdate(req.params.id, { isVerified, answer }, { returnDocument: 'after' });
+    const { question, isVerified, answer } = req.body;
+    const knowledge = await Knowledge.findByIdAndUpdate(req.params.id, { question, isVerified, answer }, { returnDocument: 'after' });
     
     await ActivityLog.create({
       userId: req.user._id,

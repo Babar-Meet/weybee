@@ -167,4 +167,5 @@ async function performWebSearch(query) {
 module.exports = {
   searchKnowledgeBase,
   performWebSearch,
+  loadLocalDocuments,
 };

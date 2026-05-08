@@ -18,6 +18,7 @@ export default function AdminDashboard() {
   const [visitorStats, setVisitorStats] = useState(null);
   const [knowledge, setKnowledge] = useState([]);
   const [newKnowledge, setNewKnowledge] = useState({ question: '', answer: '', isVerified: true });
+  const [editingKnowledge, setEditingKnowledge] = useState(null);
   const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'user' });
   const [msg, setMsg] = useState('');
   const [selectedLog, setSelectedLog] = useState(null);
@@ -80,6 +81,22 @@ export default function AdminDashboard() {
       await axios.delete(`${API}/admin/knowledge/${id}`);
       fetchData();
     } catch (err) { console.error(err); }
+  };
+
+  const updateKnowledge = async (id) => {
+    try {
+      await axios.put(`${API}/admin/knowledge/${id}`, {
+        question: editingKnowledge.question,
+        answer: editingKnowledge.answer,
+        isVerified: editingKnowledge.isVerified
+      });
+      setEditingKnowledge(null);
+      setMsg('Knowledge updated successfully!');
+      fetchData();
+      setTimeout(() => setMsg(''), 3000);
+    } catch (err) {
+      setMsg(err.response?.data?.error || 'Failed to update knowledge.');
+    }
   };
 
   const createUser = async (e) => {
@@ -238,16 +255,42 @@ export default function AdminDashboard() {
               <tbody>
                 {knowledge.map(k => (
                   <tr key={k._id} style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '12px' }}>{k.question}</td>
-                    <td style={{ padding: '12px' }}>{k.answer}</td>
-                    <td style={{ padding: '12px' }}>
-                       <span style={{ padding: '4px 8px', borderRadius: '20px', background: k.isVerified ? '#dcfce7' : '#fef9c3', color: k.isVerified ? '#166534' : '#854d0e', fontSize: '0.8rem' }}>
-                         {k.source}
-                       </span>
-                    </td>
-                    <td style={{ padding: '12px' }}>
-                      <button onClick={() => deleteKnowledge(k._id)} style={{ color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}>Delete</button>
-                    </td>
+                    {editingKnowledge?._id === k._id ? (
+                      <>
+                        <td style={{ padding: '12px' }}>
+                          <input type="text" value={editingKnowledge.question} onChange={e => setEditingKnowledge({...editingKnowledge, question: e.target.value})} style={{ width: '100%', padding: '5px' }} />
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <textarea value={editingKnowledge.answer} onChange={e => setEditingKnowledge({...editingKnowledge, answer: e.target.value})} style={{ width: '100%', padding: '5px', minHeight: '80px' }}></textarea>
+                          <div>
+                            <label><input type="checkbox" checked={editingKnowledge.isVerified} onChange={e => setEditingKnowledge({...editingKnowledge, isVerified: e.target.checked})} /> Verified (Mark true to make valid)</label>
+                          </div>
+                        </td>
+                        <td style={{ padding: '12px' }}>{k.source}</td>
+                        <td style={{ padding: '12px' }}>
+                          <button onClick={() => updateKnowledge(k._id)} style={{ color: 'green', border: 'none', background: 'none', cursor: 'pointer', marginRight: '10px' }}>Save</button>
+                          <button onClick={() => setEditingKnowledge(null)} style={{ color: 'gray', border: 'none', background: 'none', cursor: 'pointer' }}>Cancel</button>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td style={{ padding: '12px' }}>{k.question}</td>
+                        <td style={{ padding: '12px', maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={k.answer}>{k.answer}</td>
+                        <td style={{ padding: '12px' }}>
+                           <span style={{ padding: '4px 8px', borderRadius: '20px', background: k.isVerified ? '#dcfce7' : '#fef9c3', color: k.isVerified ? '#166534' : '#854d0e', fontSize: '0.8rem' }}>
+                             {k.source}
+                           </span>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          {!k.readOnly && (
+                            <>
+                              <button onClick={() => setEditingKnowledge(k)} style={{ color: 'blue', border: 'none', background: 'none', cursor: 'pointer', marginRight: '10px' }}>Edit</button>
+                              <button onClick={() => deleteKnowledge(k._id)} style={{ color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}>Delete</button>
+                            </>
+                          )}
+                        </td>
+                      </>
+                    )}
                   </tr>
                 ))}
               </tbody>
