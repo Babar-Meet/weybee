@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { usePageData } from '../hooks/usePageData';
 import EditableSection from '../components/EditableSection';
@@ -44,7 +44,26 @@ export default function Contact() {
   const { loading, getSection } = usePageData('contact-us');
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState('');
+  const [activeLocationIndex, setActiveLocationIndex] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const mapRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const mapLocations = [
+    { name: "Rajkot Office", q: "22.2898144,70.7719602" },
+    { name: "Ahmedabad Office", q: "1012, Aaron Spectra, Rajpath Rangoli Rd, behind Rajpath club, Bodakdev, Ahmedabad, Gujarat 380059" },
+    { name: "Sydney Office", q: "WOTSO Pyrmont, 3/55 Pyrmont Bridge Rd, Pyrmont NSW 2009, Australia" }
+  ];
 
   useEffect(() => {
     if (loading) return;
@@ -111,32 +130,140 @@ export default function Contact() {
       <section style={{ padding: '120px 0', backgroundColor: '#fafafb' }}>
         <div className="container" style={{ display: 'flex', gap: '80px', alignItems: 'center', flexWrap: 'wrap' }}>
           
-          {/* Left: Map Circular UI with Overlay */}
+          {/* Left: Map UI with Overlay */}
           <motion.div style={{ flex: '1 1 450px', position: 'relative', maxWidth: '550px' }} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <div style={{
               width: '100%', aspectRatio: '1/1', 
-              borderRadius: '50%',
+              borderRadius: '30px',
               overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.08)',
               border: '10px solid #fff', position: 'relative',
               backgroundColor: '#e5e3df'
             }}>
               
-              {/* Google Maps Iframe Embed */}
-              <iframe 
-                src="https://maps.google.com/maps?q=22.2898144,70.7719602&z=15&output=embed" 
-                style={{ width: '100%', height: '100%', position: 'relative', zIndex: 1, border: 0 }} 
-                allowFullScreen="" 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade">
-              </iframe>
+              {/* Google Maps Iframe Embed with Animation */}
+              <AnimatePresence mode="wait">
+                <motion.iframe 
+                  key={activeLocationIndex}
+                  initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 1.1, rotate: 5 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(mapLocations[activeLocationIndex].q)}&z=15&output=embed`}
+                  style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 1, border: 0 }} 
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade">
+                </motion.iframe>
+              </AnimatePresence>
               
               {/* Geometric pattern overlay */}
               <div style={{ 
                 position: 'absolute', bottom: '0', left: '0', width: '60%', height: '30%', 
-                zIndex: 10, overflow: 'hidden'
+                zIndex: 10, overflow: 'hidden', pointerEvents: 'none'
               }}>
                  <GeometricGrid />
               </div>
+            </div>
+
+            {/* Location Selector Carousel */}
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px', gap: '15px' }}>
+              <button 
+                onClick={() => setActiveLocationIndex((prev) => (prev === 0 ? mapLocations.length - 1 : prev - 1))}
+                style={{
+                  background: '#fff', border: '1px solid #e0e0e0', borderRadius: '50%',
+                  width: '45px', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', color: '#5670FB',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#f4f6fa'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#fff'; e.currentTarget.style.transform = 'scale(1)'; }}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              
+              <div 
+                ref={dropdownRef}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{
+                  padding: '12px 24px', fontSize: '1.05rem', fontWeight: 600, color: '#333',
+                  backgroundColor: '#fff', border: '1px solid #e0e0e0', borderRadius: '30px',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.05)', minWidth: '220px', textAlign: 'center',
+                  userSelect: 'none', cursor: 'pointer', position: 'relative'
+                }}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeLocationIndex}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {mapLocations[activeLocationIndex].name}
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Hidden Dropdown Menu */}
+                <AnimatePresence>
+                  {isDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      style={{
+                        position: 'absolute',
+                        bottom: 'calc(100% + 10px)',
+                        left: '0',
+                        right: '0',
+                        backgroundColor: '#fff',
+                        borderRadius: '15px',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                        overflow: 'hidden',
+                        zIndex: 100,
+                        border: '1px solid #eee'
+                      }}
+                    >
+                      {mapLocations.map((loc, idx) => (
+                        <div
+                          key={idx}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveLocationIndex(idx);
+                            setIsDropdownOpen(false);
+                          }}
+                          style={{
+                            padding: '12px 20px',
+                            fontSize: '0.95rem',
+                            color: activeLocationIndex === idx ? '#5670FB' : '#444',
+                            backgroundColor: activeLocationIndex === idx ? '#f4f6fa' : 'transparent',
+                            transition: 'all 0.2s ease',
+                            textAlign: 'left',
+                            fontWeight: activeLocationIndex === idx ? '600' : '500'
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f4f6fa'}
+                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = activeLocationIndex === idx ? '#f4f6fa' : 'transparent'}
+                        >
+                          {loc.name}
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <button 
+                onClick={() => setActiveLocationIndex((prev) => (prev === mapLocations.length - 1 ? 0 : prev + 1))}
+                style={{
+                  background: '#fff', border: '1px solid #e0e0e0', borderRadius: '50%',
+                  width: '45px', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', color: '#5670FB',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#f4f6fa'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = '#fff'; e.currentTarget.style.transform = 'scale(1)'; }}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
             </div>
           </motion.div>
 
